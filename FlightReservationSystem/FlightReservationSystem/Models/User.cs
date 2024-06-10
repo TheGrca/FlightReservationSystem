@@ -26,7 +26,8 @@ namespace FlightReservationSystem.Models
         public DateTime DateOfBirth { get; set; }
         public Gender Gender { get; set; }
         public TypeOfUser TypeOfUser { get; set; }
-        public List<string> Reservations {  get; set; }
+        public List<Reservation> Reservations {  get; set; }
 
+        public User() { }
     }
 }

@@ -13,11 +13,13 @@ namespace FlightReservationSystem.Models
     }
     public class Review
     {
+        public int Id { get; set; }
         public User Reviewer { get; set; }
         public Airline Airline { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string ImagePath { get; set; }
         public ReviewStatus ReviewStatus { get; set; }
+        public Review() { }
     }
 }

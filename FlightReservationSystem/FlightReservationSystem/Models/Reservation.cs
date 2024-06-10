@@ -14,10 +14,12 @@ namespace FlightReservationSystem.Models
     }
     public class Reservation
     {
+        public int Id { get; set; }
         public User User { get; set; }
         public Flight Flight { get; set; }
         public int NumberOfPassengers { get; set; }
         public double TotalPrice { get; set; }
         public ReservationStatus ReservationStatus { get; set; }
+        public Reservation() { }
     }
 }
