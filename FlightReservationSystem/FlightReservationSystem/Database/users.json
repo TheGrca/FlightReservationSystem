@@ -1,0 +1,35 @@
+[
+    {
+        "Username": "User1",
+        "Password": "123",
+        "Name": "User1",
+        "Lastname": "User1",
+        "Email": "user1@gmail.com",
+        "DateOfBirth": "2000-10-20",
+        "Gender": "Male",
+        "TypeOfUser": "Traveler",
+        "Reservations": []
+    },
+    {
+        "Username": "User2",
+        "Password": "123",
+        "Name": "User2",
+        "Lastname": "User2",
+        "Email": "User2@gmail.com",
+        "DateOfBirth": "2002-12-15",
+        "Gender": "Female",
+        "TypeOfUser": "Traveler",
+        "Reservations": []
+    },
+    {
+        "Username": "Admin",
+        "Password": "123",
+        "Name": "Admin",
+        "Lastname": "Admin",
+        "Email": "admin@gmail.com",
+        "DateOfBirth": "2002-05-25",
+        "Gender": "Female",
+        "TypeOfUser": "Administrator",
+        "Reservations": []
+    }
+]

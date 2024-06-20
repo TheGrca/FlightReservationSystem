@@ -10,14 +10,25 @@ namespace FlightReservationSystem.Controllers
 {
     public class FlightsController : ApiController
     {
-        private static List<Flight> flights = new List<Flight>();
+        private static List<Flight> flights;
 
+
+        public FlightsController()
+        {
+            flights = Models.Flight.LoadFlights();
+        }
 
         // GET: api/Flights
         [HttpGet]
-        public IEnumerable<Flight> GetFlights()
+        [Route("api/flights")]
+        public IHttpActionResult GetFlights()
         {
-            return flights;
+            if (flights == null || !flights.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(flights);
         }
 
         // GET: api/Flights/{id}
@@ -72,5 +83,46 @@ namespace FlightReservationSystem.Controllers
             flights.Remove(flight);
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+        [HttpGet]
+        [Route("api/flights/active")]
+        public IHttpActionResult GetActiveFlights()
+        {
+            var activeFlights = flights.Where(f => f.FlightStatus == FlightStatus.Active).ToList();
+            return Ok(activeFlights);
+        }
+
+        [HttpPost]
+        [Route("api/flights/search")]
+        public IHttpActionResult SearchFlights([FromBody] FlightSearchModel searchModel)
+        {
+            var filteredFlights = flights.Where(f => f.FlightStatus == FlightStatus.Active);
+
+            if (!string.IsNullOrEmpty(searchModel.Departure))
+            {
+                filteredFlights = filteredFlights.Where(f => f.Departure.ToLower().Contains(searchModel.Departure.ToLower()));
+            }
+            if (!string.IsNullOrEmpty(searchModel.Destination))
+            {
+                filteredFlights = filteredFlights.Where(f => f.Destination.ToLower().Contains(searchModel.Destination.ToLower()));
+            }
+            if (searchModel.DateOfDeparture.HasValue)
+            {
+                filteredFlights = filteredFlights.Where(f => f.DateOfDeparture.Date == searchModel.DateOfDeparture.Value.Date);
+            }
+            if (searchModel.DateOfDestination.HasValue)
+            {
+                filteredFlights = filteredFlights.Where(f => f.DateOfDestination.Date == searchModel.DateOfDestination.Value.Date);
+            }
+
+            return Ok(filteredFlights);
+        }
+    }
+    public class FlightSearchModel
+    {
+        public string Departure { get; set; }
+        public string Destination { get; set; }
+        public DateTime? DateOfDeparture { get; set; }
+        public DateTime? DateOfDestination { get; set; }
     }
 }

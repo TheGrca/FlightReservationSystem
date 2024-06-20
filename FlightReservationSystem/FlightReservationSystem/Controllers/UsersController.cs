@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Security.Claims;
+using System.Text;
+using System.Web;
 using System.Web.Http;
+using System.Web.UI;
 using FlightReservationSystem.Models;
+using Microsoft.IdentityModel.Tokens;
+using static System.Collections.Specialized.BitVector32;
 
 namespace FlightReservationSystem.Controllers
 {
@@ -12,22 +19,11 @@ namespace FlightReservationSystem.Controllers
 
     public class UsersController : ApiController
     {
-
-        private static List<User> users = new List<User>
-    {
-        new User
+        private static List<User> users;
+        public UsersController()
         {
-            Username = "user",
-            Password = "user",
-            Name = "User",
-            Lastname = "User",
-            Email = "user@example.com",
-            DateOfBirth = new DateTime(2000, 1, 1),
-            Gender = Gender.Male,
-            TypeOfUser = TypeOfUser.Traveler,
-            Reservations = new List<Reservation>()
+            users = Models.User.LoadUsers();
         }
-    };
 
         [HttpGet]
         public IEnumerable<User> GetUsers()
@@ -88,5 +84,68 @@ namespace FlightReservationSystem.Controllers
             users.Remove(user);
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+        [HttpPost]
+        [Route("api/users/login")]
+        public IHttpActionResult Login([FromBody] LoginModel loginModel)
+        {
+            var user = users.SingleOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = "1";
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new Claim[]
+                {
+            new Claim(ClaimTypes.Name, user.Username),
+                    // Add more claims as needed
+                }),
+                Expires = DateTime.UtcNow.AddHours(1), // Token expiration time
+                //SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new { success = true, message = "Login successful" });
+        }
+
+        [HttpGet]
+        [Route("api/users/logout")]
+        public IHttpActionResult Logout()
+        {
+            // Clear session when user logs out
+
+
+            return Ok(new { success = true, message = "Logout successful" });
+        }
+
+        [HttpPost]
+        public IHttpActionResult Register(User user)
+        {
+            if (users.Any(u => u.Username == user.Username))
+            {
+                return BadRequest("Username already exists.");
+            }
+
+            // Set default values
+            user.TypeOfUser = TypeOfUser.Traveler;
+            user.Reservations = new List<Reservation>();
+
+            users.Add(user);
+            //SaveUsers();
+
+            return Ok(user);
+        }
+
+
+    }
+
+    public class LoginModel
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
     }
 }

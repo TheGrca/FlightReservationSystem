@@ -4,12 +4,113 @@
     <meta charset="utf-8" />
     <title>Home</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>$(document).ready(function() {
+    <script>
+        $(document).ready(function () {
             $("#navbar").load("navbar.html");
-        });</script>
+
+            // Function to fetch all active flights on page load
+            function fetchActiveFlights() {
+                $.ajax({
+                    url: "/api/flights/active",
+                    method: "GET",
+                    success: function (response) {
+                        displayFlights(response); // Display active flights
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching active flights:", error);
+                    }
+                });
+            }
+
+            // Function to fetch flights based on search criteria
+            function searchFlights(searchCriteria) {
+                $.ajax({
+                    url: "/api/flights/search",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(searchCriteria),
+                    success: function (response) {
+                        displayFlights(response); // Display filtered flights
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching flights:", error);
+                    }
+                });
+            }
+
+            // Display flights in the table
+            function displayFlights(flights) {
+                $("#flightsTable tbody").empty(); // Clear previous rows
+
+                if (flights && flights.length > 0) {
+                    var tableRows = "";
+                    flights.forEach(function (flight) {
+                        tableRows += "<tr>";
+                        tableRows += "<td>" + flight.Id + "</td>";
+                        tableRows += "<td>" + flight.Airline + "</td>";
+                        tableRows += "<td>" + flight.Departure + "</td>";
+                        tableRows += "<td>" + flight.Destination + "</td>";
+                        tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + flight.AvailableSeats + "</td>";
+                        tableRows += "<td>" + flight.OccupiedSeats + "</td>";
+                        tableRows += "<td>" + flight.Price + "</td>";
+                        tableRows += "</tr>";
+                    });
+
+                    $("#flightsTable tbody").append(tableRows); // Append rows to the table
+                } else {
+                    $("#flightsTable").append("<tr><td colspan='9'>No flights found</td></tr>");
+                }
+            }
+
+            // Handle form submission for search
+            $("#searchForm").on("submit", function (e) {
+                e.preventDefault();
+                var searchCriteria = {
+                    departure: $("#departureInput").val(),
+                    destination: $("#destinationInput").val(),
+                    dateOfDeparture: $("#dateOfDepartureInput").val(),
+                    dateOfDestination: $("#dateOfDestinationInput").val()
+                };
+                searchFlights(searchCriteria); // Fetch and display filtered flights
+            });
+
+            // Initial fetch of all active flights
+            fetchActiveFlights();
+        });
+    </script>
 </head>
 <body>
     <div id="navbar"></div>
-    <h1>Home Page</h1>
+    <form id="searchForm">
+        <label for="departureInput">Departure:</label>
+        <input type="text" id="departureInput" name="departure">
+        <label for="destinationInput">Destination:</label>
+        <input type="text" id="destinationInput" name="destination">
+        <label for="dateOfDepartureInput">Date of Departure:</label>
+        <input type="date" id="dateOfDepartureInput" name="dateOfDeparture">
+        <label for="dateOfDestinationInput">Date of Destination:</label>
+        <input type="date" id="dateOfDestinationInput" name="dateOfDestination">
+        <button type="submit">Search</button>
+    </form>
+    <table id="flightsTable" border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Airline</th>
+                <th>Departure</th>
+                <th>Destination</th>
+                <th>Date of Departure</th>
+                <th>Date of Destination</th>
+                <th>Available Seats</th>
+                <th>Occupied Seats</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Flight rows will be dynamically added here -->
+        </tbody>
+    </table>
 </body>
 </html>

@@ -3,17 +3,95 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        nav {
+            background-color: #000;
+            color: #fff;
+            padding: 10px 0;
+        }
+
+            nav ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                text-align: center;
+            }
+
+                nav ul li {
+                    display: inline;
+                    margin-right: 10px;
+                }
+
+                    nav ul li a {
+                        text-decoration: none;
+                        color: #fff;
+                        padding: 10px 15px;
+                    }
+
+                        nav ul li a:hover {
+                            background-color: #333;
+                        }
+    </style>
 </head>
 <body>
-    <nav>
+    <nav id="navbar">
         <ul>
             <li><a href="MainPage.html">Home</a></li>
             <li><a href="Airlines.html">Airlines</a></li>
             <li><a href="Reservations.html">My Reservations</a></li>
             <li><a href="Review.html">Leave a review</a></li>
-            <li><a href="Profile.html">My Profile</a></li>
-            <li><a href="Login.html">Login/Register</a></li>
+            <li id="profileLink" style="display: none;"><a href="#">Profile</a></li>
+            <li id="loginLink"><a href="Login.html">Login</a></li>
+            <li id="registerLink"><a href="Register.html">Register</a></li>
+            <li id="logoutLink" style="display: none;"><a href="#">Logout</a></li>
         </ul>
     </nav>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>$(document).ready(function () {
+            var isLoggedIn = sessionStorage.getItem("LoggedInUser") !== null; // Replace with actual check
+
+            updateNavbar(isLoggedIn);
+
+            // Function to update navbar based on login state
+            function updateNavbar(loggedIn) {
+                if (loggedIn) {
+                    // Hide login and register, show profile and logout
+                    $("#loginLink").hide();
+                    $("#registerLink").hide();
+                    $("#logoutLink").show();
+                    $("#profileLink").show();
+                    // Example: Set profile link to username or "My Profile"
+                    var username = sessionStorage.getItem("LoggedInUser");
+                    $("#profileLink a").text(username);
+                    $("#profileLink a").attr("href", "Profile.html"); // Replace with actual link
+                } else {
+                    // Show login and register, hide profile and logout
+                    $("#loginLink").show();
+                    $("#registerLink").show();
+                    $("#logoutLink").hide();
+                    $("#profileLink").hide();
+                }
+            }
+
+            // Example logout functionality
+            $("#logoutLink").on("click", function (e) {
+                e.preventDefault();
+                sessionStorage.removeItem("LoggedInUser");
+                window.location.href = "MainPage.html";
+            });
+
+            // Example: Clicking profile link (only shown when logged in)
+            $("#profileLink").on("click", function (e) {
+                e.preventDefault();
+                // Redirect to profile page
+                window.location.href = "Profile.html"; // Replace with actual profile page link
+            });
+        });</script>
 </body>
 </html>

@@ -22,27 +22,6 @@ namespace FlightReservationSystem.Controllers
             return View(flights);
         }
 
-        public ActionResult Search(string departure, string destination, DateTime? departureDate, DateTime? returnDate, string airline)
-        {
-            var query = database.Flights.Where(f => f.FlightStatus == FlightStatus.Active).AsQueryable();
-
-            if (!string.IsNullOrEmpty(departure))
-                query = query.Where(f => f.Departure == departure);
-
-            if (!string.IsNullOrEmpty(destination))
-                query = query.Where(f => f.Destination == destination);
-
-            if (departureDate.HasValue)
-                query = query.Where(f => f.DateOfDeparture.Date == departureDate.Value.Date);
-
-            if (returnDate.HasValue)
-                query = query.Where(f => f.DateOfDestination.Date == returnDate.Value.Date);
-
-            if (!string.IsNullOrEmpty(airline))
-                query = query.Where(f => f.Airline.Name == airline);
-
-            var flights = query.ToList();
-            return View("Index", flights);
-        }
+    
     }
 }
