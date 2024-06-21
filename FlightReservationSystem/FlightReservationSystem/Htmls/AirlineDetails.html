@@ -1,0 +1,88 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title id="pageTitle">Airline Details</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function () {
+            $("#navbar").load("navbar.html");
+
+            var urlParams = new URLSearchParams(window.location.search);
+            var airlineId = urlParams.get('id');
+
+            if (!airlineId) {
+                alert("Airline ID not found.");
+                window.location.href = "Airlines.html";
+            }
+
+            $.ajax({
+                url: "/api/airlines/" + airlineId,
+                method: "GET",
+                success: function (airline) {
+                    if (airline) {
+                        $("#pageTitle").text(airline.Name + " Details");
+                        $("#airlineName").text(airline.Name);
+
+                        var tableRows = "";
+                        tableRows += "<tr><td>Id</td><td>" + airline.Id + "</td></tr>";
+                        tableRows += "<tr><td>Name</td><td>" + airline.Name + "</td></tr>";
+                        tableRows += "<tr><td>Address</td><td>" + airline.Address + "</td></tr>";
+                        tableRows += "<tr><td>Contact</td><td>" + airline.Contact + "</td></tr>";
+
+                        // Fetch flights associated with the airline
+                        $.ajax({
+                            url: "/api/airlines/" + airlineId + "/flights",
+                            method: "GET",
+                            success: function (flights) {
+                                tableRows += "<tr><td>Flights</td><td>";
+                                if (flights.length > 0) {
+                                    flights.forEach(function (flight) {
+                                        tableRows += "<p>" + formatFlightDetails(flight) + "</p>";
+                                    });
+                                } else {
+                                    tableRows += "No flights available";
+                                }
+                                tableRows += "</td></tr>";
+
+                                $("#airlineDetailsBody").html(tableRows);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error("Error fetching flights:", error);
+                                tableRows += "<tr><td>Flights</td><td>Error fetching flights</td></tr>";
+                                $("#airlineDetailsBody").html(tableRows);
+                            }
+                        });
+                    } else {
+                        alert("Airline not found.");
+                        window.location.href = "Airlines.html";
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching airline details:", error);
+                    alert("Error fetching airline details. Please try again later.");
+                    window.location.href = "Airlines.html";
+                }
+            });
+
+            function formatFlightDetails(flight) {
+                return flight.Departure + " -> " + flight.Destination + " (" + new Date(flight.DateOfDeparture).toLocaleString() + ")";
+            }
+        });</script>
+</head>
+<body>
+    <div id="navbar"></div>
+    <h1 id="airlineName">Airline Details</h1>
+    <table id="airlineDetailsTable">
+        <thead>
+            <tr>
+                <th>Property</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody id="airlineDetailsBody">
+            <!-- Airline details will be dynamically inserted here -->
+        </tbody>
+    </table>
+</body>
+</html>

@@ -4,12 +4,49 @@
     <meta charset="utf-8" />
     <title>Airlines</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>$(document).ready(function() {
+    <script>
+        $(document).ready(function () {
             $("#navbar").load("navbar.html");
-        });</script>
+
+            // Fetch airlines data from API
+            $.ajax({
+                url: "/api/airlines", // API endpoint to fetch airlines
+                method: "GET",
+                success: function (response) {
+                    if (response && response.length > 0) {
+                        // Build table rows for airlines
+                        var tableRows = "";
+                        response.forEach(function (airline) {
+                            tableRows += "<tr>";
+                            tableRows += "<td><a href='AirlineDetails.html?id=" + airline.Id + "'>" + airline.Name + "</a></td>"; // Link to airline details page
+                            tableRows += "</tr>";
+                        });
+
+                        // Append rows to the table
+                        $("#airlinesTable tbody").append(tableRows);
+                    } else {
+                        $("#airlinesTable").append("<tr><td colspan='1'>No airlines available</td></tr>");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching airlines:", error);
+                    $("#airlinesTable").append("<tr><td colspan='1'>Error fetching airlines</td></tr>");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="navbar"></div>
-    <h1>Airlines Page</h1>
+    <table id="airlinesTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Airlines will be dynamically inserted here -->
+        </tbody>
+    </table>
 </body>
 </html>

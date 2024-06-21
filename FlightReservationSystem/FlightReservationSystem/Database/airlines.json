@@ -1,0 +1,58 @@
+[
+  {
+    "Id": 1,
+    "Name": "Emirates",
+    "Address": "Dubai, UAE",
+    "Contact": "contact@emirates.com",
+    "Flights": [1, 10],
+    "Reviews": []
+  },
+  {
+    "Id": 2,
+    "Name": "Lufthansa",
+    "Address": "Cologne, Germany",
+    "Contact": "contact@lufthansa.com",
+    "Flights": [3],
+    "Reviews": []
+  },
+  {
+    "Id": 3,
+    "Name": "American Airlines",
+    "Address": "Fort Worth, Texas, USA",
+    "Contact": "contact@aa.com",
+    "Flights": [6],
+    "Reviews": []
+  },
+  {
+    "Id": 4,
+    "Name": "Turkish Airlines",
+    "Address": "Istanbul, Turkey",
+    "Contact": "contact@turkishairlines.com",
+    "Flights": [11],
+    "Reviews": []
+  },
+  {
+    "Id": 5,
+    "Name": "Ryanair",
+    "Address": "Dublin, Ireland",
+    "Contact": "contact@ryanair.com",
+    "Flights": [14],
+    "Reviews": []
+  },
+  {
+    "Id": 6,
+    "Name": "AirSerbia",
+    "Address": "Belgrade, Serbia",
+    "Contact": "contact@airserbia.com",
+    "Flights": [],
+    "Reviews": []
+  },
+  {
+    "Id": 7,
+    "Name": "American Airlines",
+    "Address": "Fort Worth, Texas, USA",
+    "Contact": "contact@aa.com",
+    "Flights": [6],
+    "Reviews": []
+  }
+]

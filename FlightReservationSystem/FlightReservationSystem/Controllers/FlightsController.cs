@@ -117,6 +117,14 @@ namespace FlightReservationSystem.Controllers
 
             return Ok(filteredFlights);
         }
+
+        [HttpGet]
+        [Route("api/airlines/{id}/flights")]
+        public IHttpActionResult GetFlightsByAirline(int id)
+        {
+            var airlineFlights = flights.Where(f => f.Id == id).ToList();
+            return Ok(airlineFlights);
+        }
     }
     public class FlightSearchModel
     {

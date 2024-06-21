@@ -47,7 +47,7 @@
                     flights.forEach(function (flight) {
                         tableRows += "<tr>";
                         tableRows += "<td>" + flight.Id + "</td>";
-                        tableRows += "<td>" + flight.Airline + "</td>";
+                        tableRows += "<td><a href='AirlineDetails.html?id=" + flight.AirlineId + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
                         tableRows += "<td>" + flight.Departure + "</td>";
                         tableRows += "<td>" + flight.Destination + "</td>";
                         tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
