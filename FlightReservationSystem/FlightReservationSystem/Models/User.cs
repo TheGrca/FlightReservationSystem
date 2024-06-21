@@ -39,5 +39,11 @@ namespace FlightReservationSystem.Models
             var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
             return users;
         }
+
+        public static void SaveUsersToJson(List<User> users)
+        {
+            var jsonData = JsonConvert.SerializeObject(users, Formatting.Indented);
+            File.WriteAllText(_usersFilePath, jsonData);
+        }
     }
 }

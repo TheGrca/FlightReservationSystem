@@ -4,12 +4,96 @@
     <meta charset="utf-8" />
     <title>My Profile</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>$(document).ready(function() {
+    <script>
+        $(document).ready(function () {
             $("#navbar").load("navbar.html");
-        });</script>
+
+            // Function to load user profile information
+            function loadUserProfile() {
+                var loggedInUsername = sessionStorage.getItem("LoggedInUser");
+
+                if (loggedInUsername) {
+                    // Make AJAX request to fetch user details
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/users/" + loggedInUsername,
+                        success: function (response) {
+                            // Display user information
+                            $("#username").text(response.Username);
+                            $("#name").val(response.Name);
+                            $("#lastname").val(response.Lastname);
+                            $("#email").val(response.Email);
+                            $("#dateOfBirth").val(response.DateOfBirth);
+                            $("#gender").val(response.Gender);
+                            $("#userType").text(response.TypeOfUser); // Display type of user
+                        },
+                        error: function (xhr) {
+                            console.error("Error fetching user:", xhr.statusText);
+                            // Handle error as needed (e.g., show error message)
+                        }
+                    });
+                } else {
+                    // Handle case where user is not logged in
+                    console.log("User not logged in");
+                    // Redirect or handle appropriately
+                }
+            }
+
+            // Call loadUserProfile when document is ready
+            loadUserProfile();
+        });
+
+        $("#saveChanges").click(function () {
+            var updatedUser = {
+                Username: $("#username").text(), // Assuming username is not editable
+                Password: $("#password").val(),
+                Name: $("#name").val(),
+                Lastname: $("#lastname").val(),
+                Email: $("#email").val(),
+                DateOfBirth: $("#dateOfBirth").val(),
+                Gender: $("#gender").val(),
+                TypeOfUser: $("#userType").text() // Assuming type of user is not editable
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/api/users/updateProfile",
+                contentType: "application/json",
+                data: JSON.stringify(updatedUser),
+                success: function (response) {
+                    if (response.success) {
+                        alert("Profile updated successfully!");
+                        // Optionally update sessionStorage with updated user data
+                        sessionStorage.setItem("LoggedInUser", JSON.stringify(updatedUser));
+                        window.location.href = "MainPage.html";
+                    } else {
+                        alert("Failed to update profile.");
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error updating profile:", xhr.statusText);
+                    alert("Error updating profile. Please try again.");
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="navbar"></div>
     <h1>My Profile Page</h1>
+    <div>
+        <label>Username: </label><span id="username"></span><br>
+        <label>Name: </label><input type="text" id="name"><br>
+        <label>Lastname: </label><input type="text" id="lastname"><br>
+        <label>Email: </label><input type="email" id="email"><br>
+        <label>Date of Birth: </label><input type="date" id="dateOfBirth"><br>
+        <label>Gender: </label>
+        <select id="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+        </select><br>
+        <label>Type of User: </label><span id="userType"></span><br>
+        <button id="saveChanges">Save Changes</button>
+    </div>
 </body>
 </html>

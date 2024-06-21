@@ -34,6 +34,7 @@ namespace FlightReservationSystem.Controllers
         }
 
         [HttpGet]
+        [Route("api/users/{username}")]
         public IHttpActionResult GetUser(string username)
         {
             var user = users.SingleOrDefault(u => u.Username == username);
@@ -133,6 +134,38 @@ namespace FlightReservationSystem.Controllers
             //SaveUsers();
 
             return Ok(user);
+        }
+
+        [HttpPost]
+        [Route("api/users/updateProfile")]
+        public IHttpActionResult UpdateProfile(User updatedUser)
+        {
+            try
+            {
+                var existingUser = users.FirstOrDefault(u => u.Username == updatedUser.Username);
+                if (existingUser == null)
+                {
+                    return NotFound(); // Handle case where user is not found
+                }
+
+                // Update user details (except username which is unique and should not change)
+                existingUser.Password = updatedUser.Password;
+                existingUser.Name = updatedUser.Name;
+                existingUser.Lastname = updatedUser.Lastname;
+                existingUser.Email = updatedUser.Email;
+                existingUser.DateOfBirth = updatedUser.DateOfBirth;
+                existingUser.Gender = updatedUser.Gender;
+                updatedUser.TypeOfUser = existingUser.TypeOfUser;
+
+                // Save updated users list back to JSON file
+                Models.User.SaveUsersToJson(users);
+
+                return Ok(new { success = true });
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex); // Handle any exceptions
+            }
         }
 
 

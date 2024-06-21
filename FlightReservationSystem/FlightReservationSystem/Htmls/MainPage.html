@@ -42,6 +42,19 @@
                 });
             }
 
+            function fetchAirlineId(airlineName, callback) {
+                $.ajax({
+                    url: "/api/airlines/idByName/" + encodeURIComponent(airlineName), // Encode airline name for URL
+                    method: "GET",
+                    success: function (response) {
+                        callback(response); // Invoke callback with airline ID
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching airline ID:", error);
+                    }
+                });
+            }
+
             // Display flights in the table
             function displayFlights(flights) {
                 $("#flightsTable tbody").empty(); // Clear previous rows
@@ -49,20 +62,23 @@
                 if (flights && flights.length > 0) {
                     var tableRows = "";
                     flights.forEach(function (flight) {
-                        tableRows += "<tr>";
-                        tableRows += "<td>" + flight.Id + "</td>";
-                        tableRows += "<td><a href='AirlineDetails.html?id=" + flight.Airline + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
-                        tableRows += "<td>" + flight.Departure + "</td>";
-                        tableRows += "<td>" + flight.Destination + "</td>";
-                        tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
-                        tableRows += "<td>" + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
-                        tableRows += "<td>" + flight.AvailableSeats + "</td>";
-                        tableRows += "<td>" + flight.OccupiedSeats + "</td>";
-                        tableRows += "<td>" + flight.Price + "</td>";
-                        tableRows += "</tr>";
-                    });
+                        fetchAirlineId(flight.Airline, function (airlineId) {
+                            tableRows += "<tr>";
+                            tableRows += "<td>" + flight.Id + "</td>";
+                            tableRows += "<td><a href='AirlineDetails.html?id=" + airlineId + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
+                            tableRows += "<td>" + flight.Departure + "</td>";
+                            tableRows += "<td>" + flight.Destination + "</td>";
+                            tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
+                            tableRows += "<td>" + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
+                            tableRows += "<td>" + flight.AvailableSeats + "</td>";
+                            tableRows += "<td>" + flight.OccupiedSeats + "</td>";
+                            tableRows += "<td>" + flight.Price + "</td>";
+                            tableRows += "</tr>";
 
-                    $("#flightsTable tbody").append(tableRows); // Append rows to the table
+                            // Append rows to the table after fetching airline ID
+                            $("#flightsTable tbody").html(tableRows);
+                        });
+                    });
                 } else {
                     $("#flightsTable").append("<tr><td colspan='9'>No flights found</td></tr>");
                 }
@@ -90,6 +106,56 @@
 
             // Initial fetch of all active flights
             fetchActiveFlights();
+
+
+            function fetchUserReservations(username) {
+                $.ajax({
+                    url: "/api/reservations/user/" + username,
+                    method: "GET",
+                    success: function (response) {
+                        displayUserReservations(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching user reservations:", error);
+                    }
+                });
+            }
+
+            function displayUserReservations(reservations) {
+                $("#userReservations tbody").empty(); // Clear previous rows
+
+                if (reservations && reservations.length > 0) {
+                    var tableRows = "";
+                    reservations.forEach(function (reservation) {
+                        tableRows += "<tr>";
+                        tableRows += "<td>" + reservation.Flight.FlightNumber + "</td>";
+                        tableRows += "<td>" + reservation.Flight.Airline + "</td>";
+                        tableRows += "<td>" + reservation.Flight.DepartureAirport + "</td>";
+                        tableRows += "<td>" + reservation.Flight.DestinationAirport + "</td>";
+                        tableRows += "<td>" + new Date(reservation.Flight.DepartureTime).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + new Date(reservation.Flight.ArrivalTime).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + reservation.NumberOfPassengers + "</td>";
+                        tableRows += "<td>" + reservation.TotalPrice + "</td>";
+                        tableRows += "<td>" + reservation.ReservationStatus + "</td>";
+                        tableRows += "</tr>";
+                    });
+
+                    $("#userReservations tbody").append(tableRows); // Append rows to the table
+                } else {
+                    $("#userReservations").append("<tr><td colspan='9'>No reservations found</td></tr>");
+                }
+            }
+
+            var loggedInUser = sessionStorage.getItem("LoggedInUser");
+            if (loggedInUser) {
+                // Parse username from session storage
+                var username = JSON.parse(loggedInUser).username;
+                // Fetch and display user reservations
+                fetchUserReservations(username);
+            } else {
+                console.log("User is not logged in."); // Handle case where user is not logged in
+            }
+
         });
     </script>
 </head>
@@ -123,6 +189,26 @@
         </thead>
         <tbody>
             <!-- Flight rows will be dynamically added here -->
+        </tbody>
+    </table>
+
+    <h2>User's Reservations</h2>
+    <table id="userReservations" border="1">
+        <thead>
+            <tr>
+                <th>Flight Number</th>
+                <th>Airline</th>
+                <th>Departure Airport</th>
+                <th>Destination Airport</th>
+                <th>Date of Departure</th>
+                <th>Date of Arrival</th>
+                <th>Number of Passengers</th>
+                <th>Total Price</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- User's reservation rows will be dynamically added here -->
         </tbody>
     </table>
 </body>

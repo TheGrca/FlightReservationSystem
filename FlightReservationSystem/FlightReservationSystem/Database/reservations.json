@@ -1,0 +1,98 @@
+[
+  {
+    "User": "User1",
+    "Flight": {
+      "FlightNumber": "F1001",
+      "Airline": "Airline1",
+      "DepartureAirport": "Airport A",
+      "DestinationAirport": "Airport B",
+      "DepartureTime": "2024-07-01T08:00:00",
+      "ArrivalTime": "2024-07-01T10:00:00",
+      "Price": 150.0,
+      "AvailableSeats": 100
+    },
+    "NumberOfPassengers": 2,
+    "TotalPrice": 300.0,
+    "ReservationStatus": "Approved"
+  },
+  {
+    "User": "User1",
+    "Flight": {
+      "FlightNumber": "F1002",
+      "Airline": "Airline2",
+      "DepartureAirport": "Airport C",
+      "DestinationAirport": "Airport D",
+      "DepartureTime": "2024-07-02T09:00:00",
+      "ArrivalTime": "2024-07-02T11:00:00",
+      "Price": 200.0,
+      "AvailableSeats": 80
+    },
+    "NumberOfPassengers": 1,
+    "TotalPrice": 200.0,
+    "ReservationStatus": "Completed"
+  },
+  {
+    "User": "User1",
+    "Flight": {
+      "FlightNumber": "F1003",
+      "Airline": "Airline3",
+      "DepartureAirport": "Airport E",
+      "DestinationAirport": "Airport F",
+      "DepartureTime": "2024-07-03T10:00:00",
+      "ArrivalTime": "2024-07-03T12:00:00",
+      "Price": 180.0,
+      "AvailableSeats": 90
+    },
+    "NumberOfPassengers": 3,
+    "TotalPrice": 540.0,
+    "ReservationStatus": "Created"
+  },
+  {
+    "User": "User2",
+    "Flight": {
+      "FlightNumber": "F2001",
+      "Airline": "Airline1",
+      "DepartureAirport": "Airport A",
+      "DestinationAirport": "Airport B",
+      "DepartureTime": "2024-07-04T08:00:00",
+      "ArrivalTime": "2024-07-04T10:00:00",
+      "Price": 170.0,
+      "AvailableSeats": 95
+    },
+    "NumberOfPassengers": 1,
+    "TotalPrice": 170.0,
+    "ReservationStatus": "Approved"
+  },
+  {
+    "User": "User2",
+    "Flight": {
+      "FlightNumber": "F2002",
+      "Airline": "Airline2",
+      "DepartureAirport": "Airport C",
+      "DestinationAirport": "Airport D",
+      "DepartureTime": "2024-07-05T09:00:00",
+      "ArrivalTime": "2024-07-05T11:00:00",
+      "Price": 190.0,
+      "AvailableSeats": 85
+    },
+    "NumberOfPassengers": 2,
+    "TotalPrice": 380.0,
+    "ReservationStatus": "Canceled"
+  },
+  {
+    "User": "User2",
+    "Flight": {
+      "FlightNumber": "F2003",
+      "Airline": "Airline3",
+      "DepartureAirport": "Airport E",
+      "DestinationAirport": "Airport F",
+      "DepartureTime": "2024-07-06T10:00:00",
+      "ArrivalTime": "2024-07-06T12:00:00",
+      "Price": 210.0,
+      "AvailableSeats": 70
+    },
+    "NumberOfPassengers": 4,
+    "TotalPrice": 840.0,
+    "ReservationStatus": "Created"
+  }
+]

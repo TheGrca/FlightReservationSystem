@@ -35,6 +35,26 @@ namespace FlightReservationSystem.Controllers
 
             return Ok(airline);
         }
+
+        [HttpGet]
+        [Route("api/airlines/idByName/{name}")]
+        public IHttpActionResult GetAirlineIdByName(string name)
+        {
+            try
+            {
+                var airline = airlines.SingleOrDefault(a => a.Name == name);
+                if (airline == null)
+                {
+                    return NotFound();
+                }
+                return Ok(airline.Id);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
-    
 }
+    
+
