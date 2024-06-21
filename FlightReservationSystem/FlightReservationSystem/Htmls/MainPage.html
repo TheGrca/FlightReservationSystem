@@ -7,6 +7,8 @@
     <script>
         $(document).ready(function () {
             $("#navbar").load("navbar.html");
+            var flightsData = [];
+            var sortAscending = true;
 
             // Function to fetch all active flights on page load
             function fetchActiveFlights() {
@@ -14,6 +16,7 @@
                     url: "/api/flights/active",
                     method: "GET",
                     success: function (response) {
+                        flightsData = response;
                         displayFlights(response); // Display active flights
                     },
                     error: function (xhr, status, error) {
@@ -30,6 +33,7 @@
                     contentType: "application/json",
                     data: JSON.stringify(searchCriteria),
                     success: function (response) {
+                        flightsData = response;
                         displayFlights(response); // Display filtered flights
                     },
                     error: function (xhr, status, error) {
@@ -47,7 +51,7 @@
                     flights.forEach(function (flight) {
                         tableRows += "<tr>";
                         tableRows += "<td>" + flight.Id + "</td>";
-                        tableRows += "<td><a href='AirlineDetails.html?id=" + flight.AirlineId + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
+                        tableRows += "<td><a href='AirlineDetails.html?id=" + flight.Airline + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
                         tableRows += "<td>" + flight.Departure + "</td>";
                         tableRows += "<td>" + flight.Destination + "</td>";
                         tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
@@ -76,6 +80,14 @@
                 searchFlights(searchCriteria); // Fetch and display filtered flights
             });
 
+            $("#sortPriceButton").on("click", function () {
+                sortAscending = !sortAscending;
+                flightsData.sort(function (a, b) {
+                    return sortAscending ? a.Price - b.Price : b.Price - a.Price;
+                });
+                displayFlights(flightsData);
+            });
+
             // Initial fetch of all active flights
             fetchActiveFlights();
         });
@@ -94,6 +106,7 @@
         <input type="date" id="dateOfDestinationInput" name="dateOfDestination">
         <button type="submit">Search</button>
     </form>
+    <button id="sortPriceButton">Sort by Price</button>
     <table id="flightsTable" border="1">
         <thead>
             <tr>
