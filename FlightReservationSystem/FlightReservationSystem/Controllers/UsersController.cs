@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.UI;
 using FlightReservationSystem.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Tokens;
 using static System.Collections.Specialized.BitVector32;
 
@@ -90,26 +92,19 @@ namespace FlightReservationSystem.Controllers
         public IHttpActionResult Login([FromBody] LoginModel loginModel)
         {
             var user = users.SingleOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
-            if (user == null)
+            if (user != null)
+            {
+                System.Web.HttpContext.Current.Session["User"] = user;
+                return Ok(new
+                {
+                    success = true,
+                    username = user.Username // return the username
+                });
+            }
+            else
             {
                 return Unauthorized();
             }
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = "1";
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-            new Claim(ClaimTypes.Name, user.Username),
-                    // Add more claims as needed
-                }),
-                Expires = DateTime.UtcNow.AddHours(1), // Token expiration time
-                //SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return Ok(new { success = true, message = "Login successful" });
         }
 
         [HttpGet]
@@ -117,7 +112,7 @@ namespace FlightReservationSystem.Controllers
         public IHttpActionResult Logout()
         {
             // Clear session when user logs out
-
+            System.Web.HttpContext.Current.Session["User"] = null;
 
             return Ok(new { success = true, message = "Logout successful" });
         }

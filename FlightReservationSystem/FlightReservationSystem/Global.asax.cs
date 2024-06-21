@@ -6,6 +6,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Web.SessionState;
 using FlightReservationSystem.Models;
 
 namespace FlightReservationSystem
@@ -22,6 +23,15 @@ namespace FlightReservationSystem
 
             Database database = new Database();
             Application["Database"] = database;
+        }
+
+        public override void Init()
+        {
+            this.PostAuthenticateRequest += (sender, e) =>
+            {
+                HttpContext.Current.SetSessionStateBehavior(SessionStateBehavior.Required);
+            };
+            base.Init();
         }
     }
 }
