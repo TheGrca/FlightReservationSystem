@@ -45,5 +45,10 @@ namespace FlightReservationSystem.Models
             var jsonData = JsonConvert.SerializeObject(users, Formatting.Indented);
             File.WriteAllText(_usersFilePath, jsonData);
         }
+
+        public override string ToString()
+        {
+            return Name + Username + Password + Lastname + Email + DateOfBirth + Gender + TypeOfUser;
+        }
     }
 }

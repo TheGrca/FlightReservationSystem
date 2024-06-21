@@ -215,7 +215,6 @@
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AirlinesController.cs" />
     <Compile Include="Controllers\FlightsController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ReservationsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />

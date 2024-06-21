@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.SessionState;
+using FlightReservationSystem.Controllers;
 using FlightReservationSystem.Models;
 
 namespace FlightReservationSystem
@@ -21,8 +22,7 @@ namespace FlightReservationSystem
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Database database = new Database();
-            Application["Database"] = database;
+            Application["Users"] = Models.User.LoadUsers() ?? new List<User>();
         }
 
         public override void Init()

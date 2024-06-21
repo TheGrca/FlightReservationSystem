@@ -3,10 +3,37 @@
 <head>
     <meta charset="utf-8" />
     <title>Register</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#navbar").load("navbar.html");
-        });</script>
+
+            $("#registerForm").on("submit", function (e) {
+                e.preventDefault(); // Prevent default form submission
+
+                $.ajax({
+                    type: "POST",
+                    url: "/api/users/register",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        username: $("#username").val(),
+                        password: $("#password").val(),
+                        name: $("#name").val(),
+                        email: $("#email").val(),
+                        dob: $("#dob").val(), // Ensure date is in YYYY-MM-DD format
+                        gender: $("#gender").val()
+                    }),
+                    success: function (response) {
+                        console.log("Registration successful:", response);
+                        window.location.href = "Login.html";
+                    },
+                    error: function (xhr) {
+                        console.error("Error registering user:", xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -36,7 +63,7 @@
             form input[type="password"],
             form input[type="email"],
             form input[type="date"] {
-                width: calc(100% - 20px); /* Adjust input width */
+                width: calc(100% - 20px);
                 padding: 8px;
                 margin-bottom: 15px;
                 border: 1px solid #ccc;
@@ -45,7 +72,7 @@
             }
 
             form select {
-                width: calc(100% - 20px); /* Adjust select width */
+                width: calc(100% - 20px);
                 padding: 8px;
                 margin-bottom: 15px;
                 border: 1px solid #ccc;
@@ -101,37 +128,5 @@
         <button type="submit">Register</button>
     </form>
     <p><a href="Login.html">Already have an account? Log in</a></p>
-
-    <script>
-        $(document).ready(function () {
-            $("#navbar").load("navbar.html");
-
-            $("#registerForm").on("submit", function (e) {
-                e.preventDefault(); // Prevent default form submission
-
-                $.ajax({
-                    type: "POST",
-                    url: "/api/users/register",
-                    contentType: "application/json",
-                    data: JSON.stringify({
-                        username: $("#username").val(),
-                        password: $("#password").val(),
-                        name: $("#name").val(),
-                        email: $("#email").val(),
-                        dob: $("#dob").val(),
-                        gender: $("#gender").val()
-                    }),
-                    success: function (response) {
-                        // Handle success response (redirect or show message)
-                        window.location.href = "Login.html"; // Redirect to login page after successful registration
-                    },
-                    error: function (xhr) {
-                        // Handle error response (show error message)
-                        console.error("Error registering user:", xhr.responseText);
-                    }
-                });
-            });
-        });
-    </script>
 </body>
 </html>

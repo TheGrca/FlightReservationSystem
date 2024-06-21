@@ -21,10 +21,16 @@ namespace FlightReservationSystem.Controllers
 
     public class UsersController : ApiController
     {
-        private static List<User> users;
-        public UsersController()
+        private List<User> users
         {
-            users = Models.User.LoadUsers();
+            get
+            {
+                return System.Web.HttpContext.Current.Application["Users"] as List<User>;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Application["Users"] = value;
+            }
         }
 
         [HttpGet]
@@ -92,6 +98,10 @@ namespace FlightReservationSystem.Controllers
         [Route("api/users/login")]
         public IHttpActionResult Login([FromBody] LoginModel loginModel)
         {
+            foreach(User u in users)
+            {
+                Debug.WriteLine(u.ToString());
+            }
             var user = users.SingleOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
             if (user != null)
             {
@@ -119,6 +129,7 @@ namespace FlightReservationSystem.Controllers
         }
 
         [HttpPost]
+        [Route("api/users/register")]
         public IHttpActionResult Register(User user)
         {
             if (users.Any(u => u.Username == user.Username))
@@ -126,13 +137,17 @@ namespace FlightReservationSystem.Controllers
                 return BadRequest("Username already exists.");
             }
 
-            // Set default values
+            if (!DateTime.TryParse(user.DateOfBirth.ToString(), out DateTime parsedDate))
+            {
+                return BadRequest("Invalid date format.");
+            }
+            user.DateOfBirth = parsedDate;
             user.TypeOfUser = TypeOfUser.Traveler;
             user.Reservations = new List<Reservation>();
 
             users.Add(user);
-            //SaveUsers();
-
+            // Uncomment and implement SaveUsers method to persist data
+            // SaveUsers();
             return Ok(user);
         }
 
