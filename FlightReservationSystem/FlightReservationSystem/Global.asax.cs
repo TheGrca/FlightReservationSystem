@@ -23,6 +23,7 @@ namespace FlightReservationSystem
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             Application["Users"] = Models.User.LoadUsers() ?? new List<User>();
+            Application["Flights"] = Models.Flight.LoadFlights() ?? new List<Flight>();
         }
 
         public override void Init()

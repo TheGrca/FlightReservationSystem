@@ -252,6 +252,7 @@
     <Content Include="Global.asax" />
     <Content Include="Htmls\AirlineDetails.html" />
     <Content Include="Htmls\Airlines.html" />
+    <Content Include="Htmls\BuyTicket.html" />
     <Content Include="Htmls\Login.html" />
     <Content Include="Htmls\MainPage.html" />
     <Content Include="Htmls\NavBar.html" />
@@ -259,6 +260,7 @@
     <Content Include="Htmls\Register.html" />
     <Content Include="Htmls\Reservations.html" />
     <Content Include="Htmls\Review.html" />
+    <Content Include="Htmls\ThankYou.html" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />

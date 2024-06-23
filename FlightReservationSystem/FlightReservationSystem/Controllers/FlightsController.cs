@@ -10,12 +10,16 @@ namespace FlightReservationSystem.Controllers
 {
     public class FlightsController : ApiController
     {
-        private static List<Flight> flights;
-
-
-        public FlightsController()
+        private List<Flight> flights
         {
-            flights = Models.Flight.LoadFlights();
+            get
+            {
+                return System.Web.HttpContext.Current.Application["Flights"] as List<Flight>;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Application["Flights"] = value;
+            }
         }
 
         // GET: api/Flights
@@ -126,6 +130,31 @@ namespace FlightReservationSystem.Controllers
             return Ok(airlineFlights);
         }
 
+        [HttpPost]
+        [Route("api/flights/updateSeats")]
+        public IHttpActionResult UpdateSeats(UpdateSeatsRequest request)
+        {
+            // Assuming 'flights' is your data context or repository
+            var flight = flights.SingleOrDefault(f => f.Id == request.FlightId);
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
+            if (flight.AvailableSeats < request.Tickets)
+            {
+                return BadRequest("Not enough available seats.");
+            }
+
+            flight.AvailableSeats -= request.Tickets;
+            flight.OccupiedSeats += request.Tickets;
+
+            // Save the updated flight details
+            //SaveFlight(flight); // Implement SaveFlight to persist changes
+
+            return Ok(new { message = "Seats updated successfully" });
+        }
+
 
     }
     public class FlightSearchModel
@@ -135,4 +164,10 @@ namespace FlightReservationSystem.Controllers
         public DateTime? DateOfDeparture { get; set; }
         public DateTime? DateOfDestination { get; set; }
     }
+    public class UpdateSeatsRequest
+    {
+        public int FlightId { get; set; }
+        public int Tickets { get; set; }
+    }
+
 }

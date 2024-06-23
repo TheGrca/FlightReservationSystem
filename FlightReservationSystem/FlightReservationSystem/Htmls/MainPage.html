@@ -61,27 +61,47 @@
 
                 if (flights && flights.length > 0) {
                     var tableRows = "";
-                    flights.forEach(function (flight) {
-                        fetchAirlineId(flight.Airline, function (airlineId) {
-                            tableRows += "<tr>";
-                            tableRows += "<td>" + flight.Id + "</td>";
-                            tableRows += "<td><a href='AirlineDetails.html?id=" + airlineId + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
-                            tableRows += "<td>" + flight.Departure + "</td>";
-                            tableRows += "<td>" + flight.Destination + "</td>";
-                            tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
-                            tableRows += "<td>" + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
-                            tableRows += "<td>" + flight.AvailableSeats + "</td>";
-                            tableRows += "<td>" + flight.OccupiedSeats + "</td>";
-                            tableRows += "<td>" + flight.Price + "</td>";
-                            tableRows += "</tr>";
-
-                            // Append rows to the table after fetching airline ID
-                            $("#flightsTable tbody").html(tableRows);
+                    var airlineIdPromises = flights.map(function (flight) {
+                        return new Promise(function (resolve) {
+                            fetchAirlineId(flight.Airline, function (airlineId) {
+                                var row = "<tr>";
+                                row += "<td>" + flight.Id + "</td>";
+                                row += "<td><a href='AirlineDetails.html?id=" + airlineId + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
+                                row += "<td>" + flight.Departure + "</td>";
+                                row += "<td>" + flight.Destination + "</td>";
+                                row += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
+                                row += "<td>" + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
+                                row += "<td>" + flight.AvailableSeats + "</td>";
+                                row += "<td>" + flight.OccupiedSeats + "</td>";
+                                row += "<td>" + flight.Price + "</td>";
+                                row += "<td><button class='buyTicketButton' data-flight-id='" + flight.Id + "'" + (flight.AvailableSeats === 0 ? " disabled" : "") + ">Buy Ticket</button></td>";
+                                row += "</tr>";
+                                resolve(row);
+                            });
                         });
                     });
+
+                    Promise.all(airlineIdPromises).then(function (rows) {
+                        $("#flightsTable tbody").html(rows.join('')); // Append all rows at once
+                        bindBuyButtonEvents();
+                    });
                 } else {
-                    $("#flightsTable").append("<tr><td colspan='9'>No flights found</td></tr>");
+                    $("#flightsTable").append("<tr><td colspan='10'>No flights found</td></tr>");
                 }
+            }
+
+            function bindBuyButtonEvents() {
+                $(".buyTicketButton").on("click", function () {
+                    var flightId = $(this).data("flight-id");
+                    var loggedInUser = sessionStorage.getItem("LoggedInUser");
+                    if (loggedInUser) {
+                        // Navigate to BuyTicket.html with flight ID
+                        window.location.href = "BuyTicket.html?flightId=" + flightId;
+                    } else {
+                        // Navigate to login page
+                        window.location.href = "Login.html";
+                    }
+                });
             }
 
             // Handle form submission for search
@@ -185,6 +205,7 @@
                 <th>Available Seats</th>
                 <th>Occupied Seats</th>
                 <th>Price</th>
+                <th>Buy Ticket</th>
             </tr>
         </thead>
         <tbody>
