@@ -80,11 +80,6 @@ namespace FlightReservationSystem.Controllers
 
             airlines.Add(airline);
 
-            foreach(Airline e in airlines)
-            {
-                Debug.Write(e.Name);
-            }
-
             return Created($"api/airlines/{airline.Id}", airline);
         }
 

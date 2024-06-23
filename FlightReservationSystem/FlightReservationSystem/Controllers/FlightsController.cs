@@ -47,6 +47,32 @@ namespace FlightReservationSystem.Controllers
             return Ok(flight);
         }
 
+        [HttpPost]
+        [Route("api/flights")]
+        public IHttpActionResult AddFlight([FromBody] Flight newFlight)
+        {
+            if(newFlight == null)
+            {
+                return BadRequest();
+            }
+            // Find the highest current ID in flights list
+            int maxId = flights.Max(f => f.Id);
+
+            // Increment the ID for the new flight
+            newFlight.Id = maxId + 1;
+
+            // Set other properties for the new flight
+            newFlight.FlightStatus = FlightStatus.Active;
+            newFlight.OccupiedSeats = 0;
+
+            // Add the new flight to the flights list
+            flights.Add(newFlight);
+
+            // Return HTTP 201 Created status with the newly added flight
+            return Created($"api/flights/{newFlight.Id}", newFlight);
+        }
+
+
         // POST: api/Flights
         [HttpPost]
         public IHttpActionResult PostFlight(Flight flight)
@@ -74,18 +100,36 @@ namespace FlightReservationSystem.Controllers
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE: api/Flights/{id}
         [HttpDelete]
-        public IHttpActionResult DeleteFlight(int id)
+        [Route("api/flights/{id}")]
+        public IHttpActionResult DeleteFlight(int id, [FromBody] List<Reservation> reservations)
         {
-            var flight = flights.SingleOrDefault(f => f.Id == id);
-            if (flight == null)
+            var flightToDelete = flights.FirstOrDefault(f => f.Id == id);
+            if (flightToDelete == null)
             {
                 return NotFound();
             }
 
-            flights.Remove(flight);
-            return StatusCode(HttpStatusCode.NoContent);
+            // Check if there are reservations with status 'Created' or 'Approved' for this flight
+            bool canDelete = true;
+            foreach (var reservation in reservations)
+            {
+                if (reservation.Flight.Id == id &&
+                    (reservation.ReservationStatus == ReservationStatus.Created ||
+                     reservation.ReservationStatus == ReservationStatus.Approved))
+                {
+                    canDelete = false;
+                    break;
+                }
+            }
+
+            if (!canDelete)
+            {
+                return BadRequest("Cannot delete flight with existing 'Created' or 'Approved' reservations.");
+            }
+
+            flights.Remove(flightToDelete);
+            return Ok();
         }
 
         [HttpGet]

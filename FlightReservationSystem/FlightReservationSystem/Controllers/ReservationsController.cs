@@ -10,11 +10,32 @@ namespace FlightReservationSystem.Controllers
 {
     public class ReservationsController : ApiController
     {
-        private static List<Reservation> reservations;
-        public ReservationsController()
+        private List<Reservation> reservations
         {
-            reservations = Reservation.LoadReservations();
+            get
+            {
+                return System.Web.HttpContext.Current.Application["Reservations"] as List<Reservation>;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Application["Reservations"] = value;
+            }
         }
+
+
+        [HttpGet]
+        [Route("api/reservations")]
+        public IHttpActionResult GetReservations()
+        {
+            if (reservations == null || !reservations.Any())
+            {
+                return NotFound();
+            }
+
+            return Ok(reservations);
+        }
+
+
 
         [HttpGet]
         [Route("api/reservations/user/{username}")]
