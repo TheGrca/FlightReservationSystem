@@ -1,0 +1,99 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Edit Review</title>
+    <style>
+        /* Add your styles here */
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Edit Review</h1>
+    <div id="review-details">
+        <!-- Review details will be dynamically added here -->
+    </div>
+    <div>
+        <label for="review-status">Review Status:</label>
+        <select id="review-status">
+            <option value="0">Created</option>
+            <option value="1">Approved</option>
+            <option value="2">Rejected</option>
+        </select>
+        <button id="saveReview">Save</button>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var urlParams = new URLSearchParams(window.location.search);
+            var reviewId = urlParams.get('id');
+
+            // Function to fetch review details
+            function loadReviewDetails() {
+                $.ajax({
+                    type: "GET",
+                    url: `/api/reviews/${reviewId}`,
+                    success: function (review) {
+                        $('#review-details').html(`
+                                <p><strong>ID:</strong> ${review.Id}</p>
+                                <p><strong>Reviewer:</strong> ${review.Reviewer.Name}</p>
+                                <p><strong>Airline:</strong> ${review.Airline.Name}</p>
+                                <p><strong>Title:</strong> ${review.Title}</p>
+                                <p><strong>Content:</strong> ${review.Content}</p>
+                                <p><strong>Image Path:</strong> ${review.ImagePath}</p>
+                                <p><strong>Review Status:</strong> ${getReviewStatusText(review.ReviewStatus)}</p>
+                            `);
+                        $('#review-status').val(review.ReviewStatus.toString());
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching review details:', error);
+                    }
+                });
+            }
+
+            // Function to save review status
+            function saveReviewStatus() {
+                var updatedReview = {
+                    ReviewStatus: parseInt($('#review-status').val())
+                };
+
+                $.ajax({
+                    type: "PUT",
+                    url: `/api/reviews/${reviewId}`,
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedReview),
+                    success: function (response) {
+                        // Redirect back to previous page or handle success
+                        window.location.href = 'AdminReviews.html';
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error updating review status:', error);
+                    }
+                });
+            }
+
+            // Event listener for Save button click
+            $("#saveReview").click(function () {
+                saveReviewStatus(); // Call the saveReviewStatus function
+            });
+
+            // Function to get review status text
+            function getReviewStatusText(status) {
+                switch (status) {
+                    case 0:
+                        return 'Created';
+                    case 1:
+                        return 'Approved';
+                    case 2:
+                        return 'Rejected';
+                    default:
+                        return 'Unknown';
+                }
+            }
+
+            // Load review details when page is ready
+            loadReviewDetails();
+        });
+    </script>
+</body>
+</html>

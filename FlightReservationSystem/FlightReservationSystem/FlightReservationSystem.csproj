@@ -216,6 +216,7 @@
     <Compile Include="Controllers\AirlinesController.cs" />
     <Compile Include="Controllers\FlightsController.cs" />
     <Compile Include="Controllers\ReservationsController.cs" />
+    <Compile Include="Controllers\ReviewsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
@@ -252,6 +253,7 @@
     <Content Include="Global.asax" />
     <Content Include="Htmls\AdminAirlines.html" />
     <Content Include="Htmls\AdminEditFlight.html" />
+    <Content Include="Htmls\AdminEditReview.html" />
     <Content Include="Htmls\AdminFlights.html" />
     <Content Include="Htmls\AdminReservations.html" />
     <Content Include="Htmls\AdminReviews.html" />

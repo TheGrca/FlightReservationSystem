@@ -26,6 +26,7 @@ namespace FlightReservationSystem
             Application["Flights"] = Models.Flight.LoadFlights() ?? new List<Flight>();
             Application["Airlines"] = Models.Airline.LoadAirlines() ?? new List<Airline>();
             Application["Reservations"] = Models.Reservation.LoadReservations() ?? new List<Reservation>();
+            Application["Reviews"] = Models.Review.LoadReviews() ?? new List<Review>();
         }
 
         public override void Init()
