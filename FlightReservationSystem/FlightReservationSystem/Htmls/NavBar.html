@@ -41,10 +41,14 @@
 <body>
     <nav id="navbar">
         <ul>
-            <li><a href="MainPage.html">Home</a></li>
-            <li><a href="Airlines.html">Airlines</a></li>
-            <li><a href="Reservations.html">My Reservations</a></li>
-            <li><a href="Review.html">Leave a review</a></li>
+            <li id="homeLink"><a href="MainPage.html">Home</a></li>
+            <li id="airlinesLink"><a href="Airlines.html">Airlines</a></li>
+            <li id="adminAirlines" style="display: none;"><a href="AdminAirlines.html">Edit Airlines</a></li>
+            <li id="adminFlights" style="display: none;"><a href="AdminFlights.html">Edit Flights</a></li>
+            <li id="reservationLink" style="display: none;"><a href="Reservations.html">My Reservations</a></li>
+            <li id="adminReservation" style="display: none;"><a href="AdminReservation.html">Edit Reservations</a></li>
+            <li id="reviewsLink" style="display: none;"><a href="Review.html">Leave a review</a></li>
+            <li id="adminReviews" style="display: none;"><a href="AdminReviews.html">Edit Reviews</a></li>
             <li id="profileLink" style="display: none;"><a href="#">Profile</a></li>
             <li id="loginLink"><a href="Login.html">Login</a></li>
             <li id="registerLink"><a href="Register.html">Register</a></li>
@@ -53,29 +57,80 @@
     </nav>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>$(document).ready(function () {
-            var isLoggedIn = sessionStorage.getItem("LoggedInUser") !== null; // Replace with actual check
+    <script>
+        var userType;
+        $(document).ready(function () {
+        var isLoggedIn = sessionStorage.getItem("LoggedInUser") !== null; // Replace with actual check
+    
+            var userUsername = sessionStorage.getItem("LoggedInUser")
+                if (userUsername) {
+                    $.ajax({
+                        type: "GET",
+                        url: "/api/users/" + userUsername,
+                        success: function (response) {
+                            $("#userType").text(response.TypeOfUser);
+                            // Now that the AJAX call is complete, handle userType here
+                           userType = response.TypeOfUser;
+                            console.log("User Type: " + userType);
+                            updateNavbar(isLoggedIn);
+                        },
+                        error: function (xhr) {
+                            console.error("Error fetching user:", xhr.statusText);
+                        }
+                    });
+                } else {
+                    console.log("User not logged in");
+                    updateNavbar(isLoggedIn);
+                }
 
-            updateNavbar(isLoggedIn);
+            
+            
 
             // Function to update navbar based on login state
             function updateNavbar(loggedIn) {
-                if (loggedIn) {
+                if (loggedIn && userType == "1") {
                     // Hide login and register, show profile and logout
+                    $("#homeLink").hide();
+                    $("#airlinesLink").hide();
                     $("#loginLink").hide();
                     $("#registerLink").hide();
                     $("#logoutLink").show();
                     $("#profileLink").show();
-                    // Example: Set profile link to username or "My Profile"
+                    $("#adminAirlines").show();
+                    $("#adminFlights").show();
+                    $("#adminReservation").show();
+                    $("#adminReviews").show();
+                    var username = sessionStorage.getItem("LoggedInUser");
+                    $("#profileLink a").text(username);
+                    $("#profileLink a").attr("href", "Profile.html");
+                } 
+                else if (loggedIn && userType == "0") {
+                    $("#homeLink").show();
+                    $("#airlinesLink").show();
+                    $("#loginLink").hide();
+                    $("#registerLink").hide();
+                    $("#logoutLink").show();
+                    $("#profileLink").show();
+                    $("#reservationLink").show();
+                    $("#reviewsLink").show();
                     var username = sessionStorage.getItem("LoggedInUser");
                     $("#profileLink a").text(username);
                     $("#profileLink a").attr("href", "Profile.html"); // Replace with actual link
+
                 } else {
                     // Show login and register, hide profile and logout
+                    $("#homeLink").show();
+                    $("#airlinesLink").show();
                     $("#loginLink").show();
                     $("#registerLink").show();
                     $("#logoutLink").hide();
                     $("#profileLink").hide();
+                    $("#reservationLink").hide();
+                    $("#reviewsLink").hide();
+                    $("#adminAirlines").hide();
+                    $("#adminFlights").hide();
+                    $("#adminReservation").hide();
+                    $("#adminReviews").hide();
                 }
             }
 

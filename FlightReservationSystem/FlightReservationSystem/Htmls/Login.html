@@ -39,7 +39,7 @@
                     success: function (response) {
                         if (response.success) {
                             sessionStorage.setItem("LoggedInUser", response.username);
-                            window.location.href = "MainPage.html"; // Redirect on successful login
+                            window.location.href = "Profile.html"; // Redirect on successful login
                         } else {
                             $("#errorMessage").text(response.message); // Display error message
                         }
