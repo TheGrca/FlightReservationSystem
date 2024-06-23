@@ -1,10 +1,308 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Airlines</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <h1>Admin Airlines</h1>
 
+    <!-- All Airlines Section -->
+    <h2>All Airlines</h2>
+    <label for="filterName">Name:</label>
+    <input type="text" id="filterName"><br>
+
+    <label for="filterAddress">Address:</label>
+    <input type="text" id="filterAddress"><br>
+
+    <label for="filterContact">Contact:</label>
+    <input type="text" id="filterContact"><br>
+
+    <button id="filterButton">Filter</button>
+    <table id="airlinesTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Contact</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Airlines data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <!-- Add Airline Section -->
+    <h2>Add Airline</h2>
+    <form id="addAirlineForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required><br>
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" required><br>
+
+        <label for="contact">Contact:</label>
+        <input type="text" id="contact" required><br>
+
+        <button type="submit">Add Airline</button>
+    </form>
+    <hr>
+
+    <!-- Edit Airline Section -->
+    <h2>Edit Airline</h2>
+    <label for="editAirline">Select Airline:</label>
+    <select id="editAirline">
+        <!-- Options will be dynamically populated -->
+    </select><br>
+
+    <label for="editName">Name:</label>
+    <input type="text" id="editName" required><br>
+
+    <label for="editAddress">Address:</label>
+    <input type="text" id="editAddress" required><br>
+
+    <label for="editContact">Contact:</label>
+    <input type="text" id="editContact" required><br>
+
+    <button id="editAirlineBtn">Edit Airline</button>
+    <hr>
+
+    <!-- Delete Airline Section -->
+    <h2>Delete Airline</h2>
+    <label for="deleteAirline">Select Airline:</label>
+    <select id="deleteAirline">
+        <!-- Options will be dynamically populated -->
+    </select><br>
+
+    <button id="deleteButton">Delete Airline</button>
+    <hr>
+
+    <script>
+        $(document).ready(function () {
+            // Function to load all airlines
+            function loadAirlines() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/airlines",
+                    success: function (response) {
+                        var airlinesTable = $("#airlinesTable tbody");
+                        airlinesTable.empty();
+
+                        response.forEach(function (airline) {
+                            airlinesTable.append(
+                                `<tr data-id="${airline.Id}">
+                                        <td>${airline.Name}</td>
+                                        <td>${airline.Address}</td>
+                                        <td>${airline.Contact}</td>
+                                    </tr>`
+                            );
+                        });
+
+                        // Populate edit dropdown after loading airlines
+                        populateDropdowns();
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching airlines:", xhr.statusText);
+                    }
+                });
+            }
+
+            // Initial load of airlines
+            loadAirlines();
+
+            // Function to populate edit/delete dropdowns
+            function populateDropdowns() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/airlines",
+                    success: function (response) {
+                        var editAirlineSelect = $("#editAirline");
+                        var deleteAirlineSelect = $("#deleteAirline");
+
+                        editAirlineSelect.empty();
+                        deleteAirlineSelect.empty();
+
+                        response.forEach(function (airline) {
+                            editAirlineSelect.append(`<option value="${airline.Id}">${airline.Name}</option>`);
+                            deleteAirlineSelect.append(`<option value="${airline.Id}">${airline.Name}</option>`);
+                        });
+
+                        // Trigger change event after populating dropdown to load initial data
+                        editAirlineSelect.trigger("change");
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching airlines:", xhr.statusText);
+                    }
+                });
+            }
+
+            $("#filterButton").click(function () {
+                var filterName = $("#filterName").val().toLowerCase();
+                var filterAddress = $("#filterAddress").val().toLowerCase();
+                var filterContact = $("#filterContact").val().toLowerCase();
+
+                // Filter table rows based on the input
+                $("#airlinesTable tbody tr").each(function () {
+                    var name = $(this).find("td:nth-child(1)").text().toLowerCase();
+                    var address = $(this).find("td:nth-child(2)").text().toLowerCase();
+                    var contact = $(this).find("td:nth-child(3)").text().toLowerCase();
+
+                    var nameMatch = name.includes(filterName);
+                    var addressMatch = address.includes(filterAddress);
+                    var contactMatch = contact.includes(filterContact);
+
+                    if (nameMatch && addressMatch && contactMatch) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            // Edit Airline select change event
+            $("#editAirline").change(function () {
+                var airlineId = $(this).val();
+
+                if (!airlineId) {
+                    // Handle if no airline is selected (optional)
+                    $("#editName").val("");
+                    $("#editAddress").val("");
+                    $("#editContact").val("");
+                    return;
+                }
+
+                $.ajax({
+                    type: "GET",
+                    url: `/api/airlines/${airlineId}`,
+                    success: function (airline) {
+                        $("#editName").val(airline.Name);
+                        $("#editAddress").val(airline.Address);
+                        $("#editContact").val(airline.Contact);
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching airline:", xhr.statusText);
+                    }
+                });
+            });
+
+            $(document).on("click", ".editBtn", function () {
+                var airlineId = $(this).closest("tr").data("id");
+
+                $.ajax({
+                    type: "GET",
+                    url: `/api/airlines/${airlineId}`,
+                    success: function (airline) {
+                        // Populate edit form fields
+                        $("#editAirline").val(airline.Id); // Set selected airline in dropdown
+                        $("#editName").val(airline.Name);
+                        $("#editAddress").val(airline.Address);
+                        $("#editContact").val(airline.Contact);
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching airline:", xhr.statusText);
+                    }
+                });
+            });
+
+            // Add Airline form submit event (optional, you can keep it if needed)
+            $("#addAirlineForm").submit(function (event) {
+                event.preventDefault();
+
+                // Validate fields
+                var name = $("#name").val();
+                var address = $("#address").val();
+                var contact = $("#contact").val();
+
+                if (!name || !address || !contact) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                var newAirline = {
+                    Name: name,
+                    Address: address,
+                    Contact: contact,
+                    Flights: [], // Assuming this is empty for new airline
+                    Reviews: []  // Assuming this is empty for new airline
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/api/airlines",
+                    contentType: "application/json",
+                    data: JSON.stringify(newAirline),
+                    success: function (response) {
+                        alert("Airline added successfully!");
+                        loadAirlines();
+                        populateDropdowns();
+                        $("#addAirlineForm")[0].reset();
+                    },
+                    error: function (xhr) {
+                        console.error("Error adding airline:", xhr.statusText);
+                    }
+                });
+            });
+
+
+            // Delete Airline button click event (optional, you can keep it if needed)
+            $("#deleteButton").click(function () {
+                var airlineId = $("#deleteAirline").val();
+
+                $.ajax({
+                    type: "DELETE",
+                    url: `/api/airlines/${airlineId}`,
+                    success: function (response) {
+                        alert("Airline deleted successfully!");
+                        loadAirlines();
+                        populateDropdowns();
+                    },
+                    error: function (xhr) {
+                        console.error("Error deleting airline:", xhr.statusText);
+                    }
+                });
+            });
+
+            $("#editAirlineBtn").click(function (event) {
+                event.preventDefault();
+
+                // Validate fields
+                var name = $("#editName").val();
+                var address = $("#editAddress").val();
+                var contact = $("#editContact").val();
+
+                if (!name || !address || !contact) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                var airlineId = $("#editAirline").val();
+                var updatedAirline = {
+                    Id: airlineId,
+                    Name: name,
+                    Address: address,
+                    Contact: contact,
+                    Flights: [], // Assuming this is empty for updated airline
+                    Reviews: []  // Assuming this is empty for updated airline
+                };
+
+                $.ajax({
+                    type: "PUT",
+                    url: `/api/airlines/${airlineId}`,
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedAirline),
+                    success: function (response) {
+                        alert("Airline updated successfully!");
+                        loadAirlines(); // Reload the airlines table
+                        populateDropdowns(); // Refresh dropdowns
+                    },
+                    error: function (xhr) {
+                        console.error("Error updating airline:", xhr.statusText);
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
