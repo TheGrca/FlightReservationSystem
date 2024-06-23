@@ -23,9 +23,16 @@
                             $("#name").val(response.Name);
                             $("#lastname").val(response.Lastname);
                             $("#email").val(response.Email);
-                            $("#dateOfBirth").val(response.DateOfBirth);
-                            $("#gender").val(response.Gender);
-                            $("#userType").text(response.TypeOfUser); // Display type of user
+                            $("#dateOfBirth").val(response.DateOfBirth.slice(0, 10)); 
+                            var userGender = response.Gender === "1" ? "Female" : "Male";
+                            $("#gender").val(userGender);
+                            var userType = response.TypeOfUser === "1" ? "Administrator" : "Traveler";
+                            console.log("User type " + userType)
+                            $("#userType").text(userType); // Display type of user
+                            if (response.TypeOfUser == "1") {
+                                loadUsersTable();
+                                $("#adminSection").show(); // Show the admin section
+                            }
                         },
                         error: function (xhr) {
                             console.error("Error fetching user:", xhr.statusText);
@@ -36,9 +43,54 @@
                     console.log("User not logged in");
                 }
             }
+            function loadUsersTable() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/users",
+                    success: function (response) {
+                        var usersTable = $("#usersTable tbody");
+                        usersTable.empty();
+                        response.forEach(function (user) {
+                            var gender = user.Gender === "1" ? "Female" : "Male";
+                            var userType = user.TypeOfUser === "1" ? "Administrator" : "Traveler";
 
+                            var filterName = $("#filterName").val().toLowerCase();
+                            var filterLastname = $("#filterLastname").val().toLowerCase();
+                            var filterStartDate = $("#filterStartDate").val();
+                            var filterEndDate = $("#filterEndDate").val();
+
+                            if ((filterName === "" || user.Name.toLowerCase().includes(filterName))
+                                && (filterLastname === "" || user.Lastname.toLowerCase().includes(filterLastname))
+                                && (filterStartDate === "" || new Date(user.DateOfBirth) >= new Date(filterStartDate))
+                                && (filterEndDate === "" || new Date(user.DateOfBirth) <= new Date(filterEndDate))) {
+
+                                usersTable.append(
+                                    `<tr>
+                                <td>${user.Username}</td>
+                                <td>${user.Name}</td>
+                                <td>${user.Lastname}</td>
+                                <td>${user.Email}</td>
+                                <td>${user.DateOfBirth.slice(0, 10)}</td>
+                                <td>${gender}</td>
+                                <td>${userType}</td>
+                            </tr>`
+                                );
+                            }
+                        });
+                        $("#usersTable").show();
+                    },
+                    error: function (xhr) {
+                        console.error("Error fetching users:", xhr.statusText);
+                        // Handle error as needed (e.g., show error message)
+                    }
+                });
+            }
             // Call loadUserProfile when document is ready
             loadUserProfile();
+
+            $("#filterButton").click(function () {
+                loadUsersTable();
+            });
         });
 
         $("#saveChanges").click(function () {
@@ -92,6 +144,41 @@
         </select><br>
         <label>Type of User: </label><span id="userType"></span><br>
         <button id="saveChanges">Save Changes</button>
+    </div>
+    <div id="adminSection" style="display:none;">
+        <h2>All Users</h2>
+        <div>
+            <label for="filterName">Name:</label>
+            <input type="text" id="filterName">
+
+            <label for="filterLastname">Lastname:</label>
+            <input type="text" id="filterLastname">
+
+            <label for="filterStartDate">Start Date:</label>
+            <input type="date" id="filterStartDate">
+
+            <label for="filterEndDate">End Date:</label>
+            <input type="date" id="filterEndDate">
+
+            <button id="filterButton">Filter</button>
+        </div>
+
+        <table id="usersTable" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                    <th>Date of Birth</th>
+                    <th>Gender</th>
+                    <th>Type of User</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Users will be populated here -->
+            </tbody>
+        </table>
     </div>
 </body>
 </html>

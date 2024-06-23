@@ -250,6 +250,10 @@
     <Content Include="Content\Navbar.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
+    <Content Include="Htmls\AdminAirlines.html" />
+    <Content Include="Htmls\AdminFlights.html" />
+    <Content Include="Htmls\AdminReservations.html" />
+    <Content Include="Htmls\AdminReviews.html" />
     <Content Include="Htmls\AirlineDetails.html" />
     <Content Include="Htmls\Airlines.html" />
     <Content Include="Htmls\BuyTicket.html" />
