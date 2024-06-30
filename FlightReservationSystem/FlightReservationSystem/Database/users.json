@@ -1,35 +1,59 @@
 [
-    {
-        "Username": "User1",
-        "Password": "123",
-        "Name": "User1",
-        "Lastname": "User1",
-        "Email": "user1@gmail.com",
-        "DateOfBirth": "2000-10-20",
-        "Gender": "Male",
-        "TypeOfUser": "Traveler",
-        "Reservations": []
-    },
-    {
-        "Username": "User2",
-        "Password": "123",
-        "Name": "User2",
-        "Lastname": "User2",
-        "Email": "User2@gmail.com",
-        "DateOfBirth": "2002-12-15",
-        "Gender": "Female",
-        "TypeOfUser": "Traveler",
-        "Reservations": []
-    },
-    {
-        "Username": "Admin",
-        "Password": "123",
-        "Name": "Admin",
-        "Lastname": "Admin",
-        "Email": "admin@gmail.com",
-        "DateOfBirth": "2002-05-25",
-        "Gender": "Female",
-        "TypeOfUser": "Administrator",
-        "Reservations": []
-    }
+  {
+    "Username": "User1",
+    "Password": "123",
+    "Name": "Marko",
+    "Lastname": "Markovic",
+    "Email": "marko.markovic@gmail.com",
+    "DateOfBirth": "1990-01-01T00:00:00",
+    "Gender": "Male",
+    "TypeOfUser": "Traveler",
+    "Reservations": [
+      0,
+      1,
+      2,
+      4
+    ]
+  },
+  {
+    "Username": "User2",
+    "Password": "123",
+    "Name": "User2",
+    "Lastname": "User2",
+    "Email": "user2@gmail.com",
+    "DateOfBirth": "1992-02-02T00:00:00",
+    "Gender": "Female",
+    "TypeOfUser": "Traveler",
+    "Reservations": [
+      1
+    ]
+  },
+  {
+    "Username": "Admin",
+    "Password": "123",
+    "Name": "Admin",
+    "Lastname": "Admin",
+    "Email": "admin@gmail.com",
+    "DateOfBirth": "1985-03-27T00:00:00",
+    "Gender": "Female",
+    "TypeOfUser": "Administrator",
+    "Reservations": []
+  },
+  {
+    "Username": "Ivan",
+    "Password": "123",
+    "Name": "Ivan",
+    "Lastname": "Grcic",
+    "Email": "ivangrcic6@gmail.com",
+    "DateOfBirth": "2002-07-04T00:00:00",
+    "Gender": "Male",
+    "TypeOfUser": "Traveler",
+    "Reservations": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
+  }
 ]

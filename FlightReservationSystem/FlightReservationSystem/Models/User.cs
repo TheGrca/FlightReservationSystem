@@ -26,29 +26,20 @@ namespace FlightReservationSystem.Models
         public string Lastname { get; set; }
         public string Email { get; set; }
         public DateTime DateOfBirth { get; set; }
+        [JsonConverter(typeof(EnumConverter))]
         public Gender Gender { get; set; }
+        [JsonConverter(typeof(EnumConverter))]
         public TypeOfUser TypeOfUser { get; set; }
-        public List<Reservation> Reservations {  get; set; }
+        public List<int> Reservations {  get; set; }
 
         private static readonly string _usersFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "users.json");
-        public User() { }
+        public User() {}
 
         public static List<User> LoadUsers()
         {
             var jsonData = File.ReadAllText(_usersFilePath);
             var users = JsonConvert.DeserializeObject<List<User>>(jsonData);
             return users;
-        }
-
-        public static void SaveUsersToJson(List<User> users)
-        {
-            var jsonData = JsonConvert.SerializeObject(users, Formatting.Indented);
-            File.WriteAllText(_usersFilePath, jsonData);
-        }
-
-        public override string ToString()
-        {
-            return Name + Username + Password + Lastname + Email + DateOfBirth + Gender + TypeOfUser;
         }
     }
 }

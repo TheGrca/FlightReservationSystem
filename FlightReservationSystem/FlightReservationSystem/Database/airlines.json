@@ -4,7 +4,10 @@
     "Name": "Emirates",
     "Address": "Dubai, UAE",
     "Contact": "contact@emirates.com",
-    "Flights": [1, 10],
+    "Flights": [
+      1,
+      10
+    ],
     "Reviews": []
   },
   {
@@ -12,7 +15,9 @@
     "Name": "Lufthansa",
     "Address": "Cologne, Germany",
     "Contact": "contact@lufthansa.com",
-    "Flights": [3],
+    "Flights": [
+      3
+    ],
     "Reviews": []
   },
   {
@@ -20,7 +25,9 @@
     "Name": "American Airlines",
     "Address": "Fort Worth, Texas, USA",
     "Contact": "contact@aa.com",
-    "Flights": [6],
+    "Flights": [
+      6
+    ],
     "Reviews": []
   },
   {
@@ -28,7 +35,9 @@
     "Name": "Turkish Airlines",
     "Address": "Istanbul, Turkey",
     "Contact": "contact@turkishairlines.com",
-    "Flights": [11],
+    "Flights": [
+      11
+    ],
     "Reviews": []
   },
   {
@@ -36,7 +45,9 @@
     "Name": "Ryanair",
     "Address": "Dublin, Ireland",
     "Contact": "contact@ryanair.com",
-    "Flights": [14],
+    "Flights": [
+      14
+    ],
     "Reviews": []
   },
   {
@@ -44,7 +55,30 @@
     "Name": "AirSerbia",
     "Address": "Belgrade, Serbia",
     "Contact": "contact@airserbia.com",
+    "Flights": [
+      2,
+      4,
+      5,
+      22
+    ],
+    "Reviews": []
+  },
+  {
+    "Id": 7,
+    "Name": "WizzAir",
+    "Address": "Budapest, Hungary",
+    "Contact": "contact@wizzair.com",
     "Flights": [],
+    "Reviews": []
+  },
+  {
+    "Id": 8,
+    "Name": "My Airline",
+    "Address": "Home",
+    "Contact": "contact@airline.com",
+    "Flights": [
+      21
+    ],
     "Reviews": []
   }
 ]

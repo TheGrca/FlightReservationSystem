@@ -4,12 +4,97 @@
     <meta charset="utf-8" />
     <title>My Reservations</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>$(document).ready(function() {
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script>
+        $(document).ready(function () {
             $("#navbar").load("navbar.html");
-        });</script>
+
+            $.ajax({
+                url: "/api/reservations/user/" + sessionStorage.getItem("LoggedInUser"),
+                method: "GET",
+                contentType: "application/json",
+                success: function (reservations) {
+                    displayReservations(reservations);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching user reservations:", error);
+                }
+            });
+
+            function displayReservations(reservations) {
+                var tableRows = "";
+
+                if (reservations && reservations.length > 0) {
+                    reservations.forEach(function (reservation) {
+                        var flight = reservation.Flight;
+                        tableRows += "<tr>";
+                        tableRows += "<td>" + reservation.Id + "</td>"; 
+                        tableRows += "<td>" + reservation.User.Username + "</td>"; 
+                        tableRows += "<td>" + flight.Airline + "</td>"; 
+                        tableRows += "<td>" + flight.Departure + "</td>"; 
+                        tableRows += "<td>" + flight.Destination + "</td>"; 
+                        tableRows += "<td>" + new Date(flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleTimeString() + " - " + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>"; 
+                        tableRows += "<td>" + reservation.NumberOfPassengers + "</td>"; 
+                        tableRows += "<td>" + reservation.TotalPrice + "</td>"; 
+                        tableRows += "<td>" + reservation.ReservationStatus + "</td>"; 
+                        tableRows += "</tr>";
+                    });
+                } else {
+                    tableRows = "<tr><td colspan='10'>No reservations found</td></tr>";
+                }
+                $("#reservationsTable tbody").html(tableRows);
+            }
+
+            $("#reservationStatusFilter").change(function () {
+                var selectedStatus = $(this).val(); 
+
+                if (selectedStatus === "All") {
+                    $("#reservationsTable tbody tr").show();
+                } else {
+                    $("#reservationsTable tbody tr").hide();
+                    $("#reservationsTable tbody tr").each(function () {
+                        var status = $(this).find("td:eq(9)").text(); 
+                        if (status === selectedStatus) {
+                            $(this).show();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
 </head>
 <body>
     <div id="navbar"></div>
     <h1>My Reservations Page</h1>
+
+    <label for="reservationStatusFilter" style="margin-left: 50px;">Filter by Reservation Status:</label>
+    <select id="reservationStatusFilter">
+        <option value="All">All</option>
+        <option value="Created">Created</option>
+        <option value="Approved">Approved</option>
+        <option value="Canceled">Canceled</option>
+        <option value="Completed">Completed</option>
+    </select>
+
+    <table id="reservationsTable">
+        <thead>
+            <tr>
+                <th>Reservation ID</th>
+                <th>Username</th>
+                <th>Airline</th>
+                <th>Departure</th>
+                <th>Destination</th>
+                <th>Date of Destination</th>
+                <th>Date of Departure</th>
+                <th>Number of Passengers</th>
+                <th>Total Price</th>
+                <th>Reservation Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
 </body>
 </html>

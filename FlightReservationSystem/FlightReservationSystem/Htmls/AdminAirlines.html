@@ -3,14 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Airlines</title>
+    <title>Edit Airlines</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin-left: 35%;
+            margin-top: 25px;
+        }
+
+        .filter-container {
+            margin-top: 20px;
+        }
+
+            .filter-container label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+            }
+
+            .filter-container input[type="text"],
+            .filter-container input[type="email"],
+            .filter-container input[type="date"],
+            .filter-container select {
+                width: calc(100% - 20px);
+                padding: 8px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+    </style>
 </head>
 <body>
-    <h1>Admin Airlines</h1>
+    <div id="navbar"></div>
+    <h1>Edit Airlines</h1>
 
-    <!-- All Airlines Section -->
-    <h2>All Airlines</h2>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
     <label for="filterName">Name:</label>
     <input type="text" id="filterName"><br>
 
@@ -21,6 +55,7 @@
     <input type="text" id="filterContact"><br>
 
     <button id="filterButton">Filter</button>
+        </div>
     <table id="airlinesTable">
         <thead>
             <tr>
@@ -30,58 +65,59 @@
             </tr>
         </thead>
         <tbody>
-            <!-- Airlines data will be dynamically populated here -->
+           
         </tbody>
     </table>
 
-    <!-- Add Airline Section -->
-    <h2>Add Airline</h2>
-    <form id="addAirlineForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required><br>
+    <div class="container">
+        <h2>Add Airline</h2>
+        <form id="addAirlineForm">
+            <label for="name">Name:</label>
+            <input type="text" id="name" required><br>
 
-        <label for="address">Address:</label>
-        <input type="text" id="address" required><br>
+            <label for="address">Address:</label>
+            <input type="text" id="address" required><br>
 
-        <label for="contact">Contact:</label>
-        <input type="text" id="contact" required><br>
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" required><br>
 
-        <button type="submit">Add Airline</button>
-    </form>
-    <hr>
+            <button type="submit">Add Airline</button>
+        </form>
+    </div>
 
-    <!-- Edit Airline Section -->
-    <h2>Edit Airline</h2>
-    <label for="editAirline">Select Airline:</label>
-    <select id="editAirline">
-        <!-- Options will be dynamically populated -->
-    </select><br>
+    <div class="container">
+        <h2>Edit Airline</h2>
+        <label for="editAirline">Select Airline:</label>
+        <select id="editAirline">
+            
+        </select><br>
 
-    <label for="editName">Name:</label>
-    <input type="text" id="editName" required><br>
+        <label for="editName">Name:</label>
+        <input type="text" id="editName" required><br>
 
-    <label for="editAddress">Address:</label>
-    <input type="text" id="editAddress" required><br>
+        <label for="editAddress">Address:</label>
+        <input type="text" id="editAddress" required><br>
 
-    <label for="editContact">Contact:</label>
-    <input type="text" id="editContact" required><br>
+        <label for="editContact">Contact:</label>
+        <input type="text" id="editContact" required><br>
 
-    <button id="editAirlineBtn">Edit Airline</button>
-    <hr>
+        <button id="editAirlineBtn">Edit Airline</button>
+    </div>
 
-    <!-- Delete Airline Section -->
+    <div class="container">
     <h2>Delete Airline</h2>
     <label for="deleteAirline">Select Airline:</label>
     <select id="deleteAirline">
         <!-- Options will be dynamically populated -->
-    </select><br>
+    </select>
 
     <button id="deleteButton">Delete Airline</button>
-    <hr>
+    </div>
 
     <script>
         $(document).ready(function () {
-            // Function to load all airlines
+            $("#navbar").load("navbar.html");
+            
             function loadAirlines() {
                 $.ajax({
                     type: "GET",
@@ -93,14 +129,12 @@
                         response.forEach(function (airline) {
                             airlinesTable.append(
                                 `<tr data-id="${airline.Id}">
-                                        <td>${airline.Name}</td>
-                                        <td>${airline.Address}</td>
-                                        <td>${airline.Contact}</td>
-                                    </tr>`
+                                                        <td>${airline.Name}</td>
+                                                        <td>${airline.Address}</td>
+                                                        <td>${airline.Contact}</td>
+                                                    </tr>`
                             );
-                        });
-
-                        // Populate edit dropdown after loading airlines
+                        });         
                         populateDropdowns();
                     },
                     error: function (xhr) {
@@ -109,10 +143,8 @@
                 });
             }
 
-            // Initial load of airlines
             loadAirlines();
 
-            // Function to populate edit/delete dropdowns
             function populateDropdowns() {
                 $.ajax({
                     type: "GET",
@@ -129,7 +161,6 @@
                             deleteAirlineSelect.append(`<option value="${airline.Id}">${airline.Name}</option>`);
                         });
 
-                        // Trigger change event after populating dropdown to load initial data
                         editAirlineSelect.trigger("change");
                     },
                     error: function (xhr) {
@@ -143,7 +174,6 @@
                 var filterAddress = $("#filterAddress").val().toLowerCase();
                 var filterContact = $("#filterContact").val().toLowerCase();
 
-                // Filter table rows based on the input
                 $("#airlinesTable tbody tr").each(function () {
                     var name = $(this).find("td:nth-child(1)").text().toLowerCase();
                     var address = $(this).find("td:nth-child(2)").text().toLowerCase();
@@ -161,12 +191,10 @@
                 });
             });
 
-            // Edit Airline select change event
             $("#editAirline").change(function () {
                 var airlineId = $(this).val();
 
                 if (!airlineId) {
-                    // Handle if no airline is selected (optional)
                     $("#editName").val("");
                     $("#editAddress").val("");
                     $("#editContact").val("");
@@ -194,8 +222,7 @@
                     type: "GET",
                     url: `/api/airlines/${airlineId}`,
                     success: function (airline) {
-                        // Populate edit form fields
-                        $("#editAirline").val(airline.Id); // Set selected airline in dropdown
+                        $("#editAirline").val(airline.Id); 
                         $("#editName").val(airline.Name);
                         $("#editAddress").val(airline.Address);
                         $("#editContact").val(airline.Contact);
@@ -206,11 +233,10 @@
                 });
             });
 
-            // Add Airline form submit event (optional, you can keep it if needed)
             $("#addAirlineForm").submit(function (event) {
                 event.preventDefault();
 
-                // Validate fields
+                
                 var name = $("#name").val();
                 var address = $("#address").val();
                 var contact = $("#contact").val();
@@ -224,8 +250,8 @@
                     Name: name,
                     Address: address,
                     Contact: contact,
-                    Flights: [], // Assuming this is empty for new airline
-                    Reviews: []  // Assuming this is empty for new airline
+                    Flights: [], 
+                    Reviews: []  
                 };
 
                 $.ajax({
@@ -246,28 +272,51 @@
             });
 
 
-            // Delete Airline button click event (optional, you can keep it if needed)
-            $("#deleteButton").click(function () {
+            $("#deleteButton").click(async function () {
                 var airlineId = $("#deleteAirline").val();
 
-                $.ajax({
-                    type: "DELETE",
-                    url: `/api/airlines/${airlineId}`,
-                    success: function (response) {
+                try {
+                    let airlineResponse = await $.ajax({
+                        type: "GET",
+                        url: `/api/airlines/${airlineId}`
+                    });
+
+                    let airline = airlineResponse;
+                    let activeFlights = [];
+
+                    if (airline.Flights != null) {
+                        for (let flightId of airline.Flights) {
+                            let flightResponse = await $.ajax({
+                                type: "GET",
+                                url: `/api/flights/${flightId}`
+                            });
+
+                            if (flightResponse.FlightStatus === "Active") {
+                                activeFlights.push(flightResponse);
+                            }
+                        }
+                    }
+
+                    if (activeFlights.length > 0) {
+                        alert("Cannot delete the airline because it has active flights.");
+                    } else {
+                        await $.ajax({
+                            type: "DELETE",
+                            url: `/api/airlines/${airlineId}`
+                        });
+
                         alert("Airline deleted successfully!");
                         loadAirlines();
                         populateDropdowns();
-                    },
-                    error: function (xhr) {
-                        console.error("Error deleting airline:", xhr.statusText);
                     }
-                });
+                } catch (xhr) {
+                    console.error("Error:", xhr.statusText);
+                }
             });
 
             $("#editAirlineBtn").click(function (event) {
                 event.preventDefault();
 
-                // Validate fields
                 var name = $("#editName").val();
                 var address = $("#editAddress").val();
                 var contact = $("#editContact").val();
@@ -283,8 +332,6 @@
                     Name: name,
                     Address: address,
                     Contact: contact,
-                    Flights: [], // Assuming this is empty for updated airline
-                    Reviews: []  // Assuming this is empty for updated airline
                 };
 
                 $.ajax({
@@ -294,8 +341,8 @@
                     data: JSON.stringify(updatedAirline),
                     success: function (response) {
                         alert("Airline updated successfully!");
-                        loadAirlines(); // Reload the airlines table
-                        populateDropdowns(); // Refresh dropdowns
+                        loadAirlines(); 
+                        populateDropdowns();
                     },
                     error: function (xhr) {
                         console.error("Error updating airline:", xhr.statusText);

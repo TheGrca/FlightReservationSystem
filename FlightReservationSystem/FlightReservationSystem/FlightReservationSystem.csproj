@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -81,6 +82,7 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IdentityModel.Tokens.Jwt, Version=7.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.7.6.2\lib\net462\System.IdentityModel.Tokens.Jwt.dll</HintPath>
@@ -107,12 +109,11 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
     <Reference Include="System.Web.Routing" />
@@ -166,6 +167,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -223,7 +225,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Airline.cs" />
-    <Compile Include="Models\Database.cs" />
+    <Compile Include="Models\EnumConverter.cs" />
     <Compile Include="Models\Flight.cs" />
     <Compile Include="Models\Reservation.cs" />
     <Compile Include="Models\Review.cs" />
@@ -253,6 +255,7 @@
     <Content Include="Global.asax" />
     <Content Include="Htmls\AdminAirlines.html" />
     <Content Include="Htmls\AdminEditFlight.html" />
+    <Content Include="Htmls\AdminEditReservation.html" />
     <Content Include="Htmls\AdminEditReview.html" />
     <Content Include="Htmls\AdminFlights.html" />
     <Content Include="Htmls\AdminReservations.html" />
@@ -260,13 +263,16 @@
     <Content Include="Htmls\AirlineDetails.html" />
     <Content Include="Htmls\Airlines.html" />
     <Content Include="Htmls\BuyTicket.html" />
+    <Content Include="Htmls\CancelReservation.html" />
     <Content Include="Htmls\Login.html" />
     <Content Include="Htmls\MainPage.html" />
+    <Content Include="Htmls\MakeAReview.html" />
     <Content Include="Htmls\NavBar.html" />
     <Content Include="Htmls\Profile.html" />
     <Content Include="Htmls\Register.html" />
     <Content Include="Htmls\Reservations.html" />
     <Content Include="Htmls\Review.html" />
+    <Content Include="Htmls\styles.css" />
     <Content Include="Htmls\ThankYou.html" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -317,6 +323,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Database\" />
+    <Folder Include="Images\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Scripts\bootstrap.min.js.map" />

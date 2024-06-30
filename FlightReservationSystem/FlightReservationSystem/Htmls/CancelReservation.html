@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Cancel Reservation</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script>
+        $(document).ready(function () {
+            $("#navbar").load("NavBar.html");
+            var loggedInUser = sessionStorage.getItem("LoggedInUser");
+
+
+            function fetchUserReservations() {
+                $.ajax({
+                    url: "/api/reservations/user/" + loggedInUser,
+                    method: "GET",
+                    success: function (reservations) {
+                        displayReservations(reservations);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching user reservations:", error);
+                    }
+                });
+            }
+
+            function displayReservations(reservations) {
+                $("#reservationsTable tbody").empty();
+
+                var filteredReservations = reservations.filter(function (reservation) {
+                    var departureTime = new Date(reservation.Flight.DateOfDeparture);
+                    var now = new Date();
+                    var within24Hours = (departureTime - now) <= 24 * 60 * 60 * 1000;
+                    return !within24Hours && (reservation.ReservationStatus === "Created" || reservation.ReservationStatus === "Approved");
+                });
+
+                if (filteredReservations.length > 0) {
+                    var tableRows = "";
+                    filteredReservations.forEach(function (reservation) {
+                        tableRows += "<tr>";
+                        tableRows += "<td>" + reservation.Flight.Departure + "</td>";
+                        tableRows += "<td>" + reservation.Flight.Destination + "</td>";
+                        tableRows += "<td>" + new Date(reservation.Flight.DateOfDeparture).toLocaleTimeString() + new Date(reservation.Flight.DateOfDeparture).toLocaleDateString() + "</td>"; + "</td>";
+                        tableRows += "<td>" + new Date(reservation.Flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(reservation.Flight.DateOfDestination).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + reservation.NumberOfPassengers + "</td>";
+                        tableRows += "<td>" + reservation.TotalPrice + "</td>";
+                        tableRows += "<td>" + reservation.ReservationStatus + "</td>";
+                        tableRows += "<td><button class='cancelReservationButton' data-reservation-id='" + reservation.Id + "' data-flight-id='" + reservation.Flight.Id + "' data-passengers='" + reservation.NumberOfPassengers + "'>Cancel Reservation</button></td>";
+                        tableRows += "</tr>";
+                    });
+
+                    $("#reservationsTable tbody").append(tableRows);
+                    bindCancelButtons();
+                } else {
+                    $("#reservationsTable tbody").append("<tr><td colspan='8'>No reservations available for cancellation</td></tr>");
+                }
+            }
+
+            function bindCancelButtons() {
+                $(".cancelReservationButton").on("click", function () {
+                    var reservationId = $(this).data("reservation-id");
+                    var flightId = $(this).data("flight-id");
+                    var numberOfPassengers = $(this).data("passengers");
+
+                    $.ajax({
+                        url: "/api/reservations/" + reservationId,
+                        method: "DELETE",
+                        success: function () {
+                            updateCanceledSeats(flightId, numberOfPassengers);
+                            removeReservationFromUser(username, reservationId);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error canceling reservation:", error);
+                        }
+                    });
+                });
+            }
+
+            function updateCanceledSeats(flightId, numberOfPassengers) {
+                $.ajax({
+                    url: "/api/flights/updateCanceledSeats",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ flightId: flightId, tickets: numberOfPassengers }),
+                    success: function () {
+                        fetchUserReservations();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error updating canceled seats:", error);
+                    }
+                });
+            }
+
+            function removeReservationFromUser(username, reservationId) {
+                $.ajax({
+                    url: "/api/users/removeReservation",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ username: username, reservationId: reservationId }),
+                    success: function () {
+                        fetchUserReservations();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error removing reservation from user:", error);
+                    }
+                });
+            }
+
+            fetchUserReservations();
+        });
+    </script>
+</head>
+<body>
+    <div id="navbar"></div>
+    <h1>Cancel Reservation</h1>
+    <table id="reservationsTable" border="1">
+        <thead>
+            <tr>
+                <th>Departure</th>
+                <th>Destination</th>
+                <th>Date of Departure</th>
+                <th>Date of Destination</th>
+                <th>Number of Passengers</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
+</body>
+</html>

@@ -21,6 +21,7 @@ namespace FlightReservationSystem.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public string ImagePath { get; set; }
+        [JsonConverter(typeof(EnumConverter))]
         public ReviewStatus ReviewStatus { get; set; }
 
         private static readonly string _reviewsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "reviews.json");

@@ -3,26 +3,24 @@
 <head>
     <meta charset="utf-8" />
     <title>Airlines</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
             $("#navbar").load("navbar.html");
 
-            // Fetch airlines data from API
             $.ajax({
-                url: "/api/airlines", // API endpoint to fetch airlines
+                url: "/api/airlines", 
                 method: "GET",
                 success: function (response) {
                     if (response && response.length > 0) {
-                        // Build table rows for airlines
                         var tableRows = "";
                         response.forEach(function (airline) {
                             tableRows += "<tr>";
-                            tableRows += "<td><a href='AirlineDetails.html?id=" + airline.Id + "'>" + airline.Name + "</a></td>"; // Link to airline details page
+                            tableRows += "<td><a href='AirlineDetails.html?id=" + airline.Id + "'>" + airline.Name + "</a></td>"; 
                             tableRows += "</tr>";
                         });
 
-                        // Append rows to the table
                         $("#airlinesTable tbody").append(tableRows);
                     } else {
                         $("#airlinesTable").append("<tr><td colspan='1'>No airlines available</td></tr>");
@@ -41,11 +39,11 @@
     <table id="airlinesTable">
         <thead>
             <tr>
-                <th>Name</th>
+                <th>All Airlines</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Airlines will be dynamically inserted here -->
+            
         </tbody>
     </table>
 </body>

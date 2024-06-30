@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <title>Home</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -17,7 +18,7 @@
                     method: "GET",
                     success: function (response) {
                         flightsData = response;
-                        displayFlights(response); // Display active flights
+                        displayFlights(response); 
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching active flights:", error);
@@ -34,7 +35,7 @@
                     data: JSON.stringify(searchCriteria),
                     success: function (response) {
                         flightsData = response;
-                        displayFlights(response); // Display filtered flights
+                        displayFlights(response);
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching flights:", error);
@@ -55,22 +56,22 @@
                 });
             }
 
-            // Display flights in the table
             function displayFlights(flights) {
                 $("#flightsTable tbody").empty(); // Clear previous rows
 
                 if (flights && flights.length > 0) {
-                    var tableRows = "";
+                    var tableRows = [];
                     var airlineIdPromises = flights.map(function (flight) {
                         return new Promise(function (resolve) {
                             fetchAirlineId(flight.Airline, function (airlineId) {
+                                console.log("Flight ID: " + flight.Id + ", Airline ID: " + airlineId);
                                 var row = "<tr>";
                                 row += "<td>" + flight.Id + "</td>";
-                                row += "<td><a href='AirlineDetails.html?id=" + airlineId + "'>" + flight.Airline + "</a></td>"; // Make airline name clickable
+                                row += "<td><a href='AirlineDetails.html?id=" + airlineId + "'>" + flight.Airline + "</a></td>";
                                 row += "<td>" + flight.Departure + "</td>";
                                 row += "<td>" + flight.Destination + "</td>";
-                                row += "<td>" + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
-                                row += "<td>" + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
+                                row += "<td>" + new Date(flight.DateOfDeparture).toLocaleTimeString() + " - " + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
+                                row += "<td>" + new Date(flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
                                 row += "<td>" + flight.AvailableSeats + "</td>";
                                 row += "<td>" + flight.OccupiedSeats + "</td>";
                                 row += "<td>" + flight.Price + "</td>";
@@ -82,8 +83,10 @@
                     });
 
                     Promise.all(airlineIdPromises).then(function (rows) {
-                        $("#flightsTable tbody").html(rows.join('')); // Append all rows at once
+                        $("#flightsTable tbody").html(rows.join('')); 
                         bindBuyButtonEvents();
+                    }).catch(function (error) {
+                        console.error("Error resolving airline IDs and generating rows:", error);
                     });
                 } else {
                     $("#flightsTable").append("<tr><td colspan='10'>No flights found</td></tr>");
@@ -95,16 +98,13 @@
                     var flightId = $(this).data("flight-id");
                     var loggedInUser = sessionStorage.getItem("LoggedInUser");
                     if (loggedInUser) {
-                        // Navigate to BuyTicket.html with flight ID
                         window.location.href = "BuyTicket.html?flightId=" + flightId;
                     } else {
-                        // Navigate to login page
                         window.location.href = "Login.html";
                     }
                 });
             }
 
-            // Handle form submission for search
             $("#searchForm").on("submit", function (e) {
                 e.preventDefault();
                 var searchCriteria = {
@@ -113,7 +113,7 @@
                     dateOfDeparture: $("#dateOfDepartureInput").val(),
                     dateOfDestination: $("#dateOfDestinationInput").val()
                 };
-                searchFlights(searchCriteria); // Fetch and display filtered flights
+                searchFlights(searchCriteria); 
             });
 
             $("#sortPriceButton").on("click", function () {
@@ -124,16 +124,19 @@
                 displayFlights(flightsData);
             });
 
-            // Initial fetch of all active flights
             fetchActiveFlights();
 
+            var allUserFlights = [];
 
-            function fetchUserReservations(username) {
+            function fetchUserFlights(reservationIds, callback) {
                 $.ajax({
-                    url: "/api/reservations/user/" + username,
-                    method: "GET",
+                    url: "/api/reservations/userFlights",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify(reservationIds),
                     success: function (response) {
-                        displayUserReservations(response);
+                        allUserFlights = response;
+                        callback(response);
                     },
                     error: function (xhr, status, error) {
                         console.error("Error fetching user reservations:", error);
@@ -141,39 +144,69 @@
                 });
             }
 
+            function filterFlightsByStatus(flights, status) {
+                if (status === "None") {
+                    return flights;
+                }
+                return flights.filter(function (reservation) {
+                    return reservation.Flight.FlightStatus === status;
+                });
+            }
+
             function displayUserReservations(reservations) {
-                $("#userReservations tbody").empty(); // Clear previous rows
+                $("#userReservations tbody").empty(); 
 
                 if (reservations && reservations.length > 0) {
                     var tableRows = "";
                     reservations.forEach(function (reservation) {
+                        var flight = reservation.Flight;
                         tableRows += "<tr>";
-                        tableRows += "<td>" + reservation.Flight.FlightNumber + "</td>";
-                        tableRows += "<td>" + reservation.Flight.Airline + "</td>";
-                        tableRows += "<td>" + reservation.Flight.DepartureAirport + "</td>";
-                        tableRows += "<td>" + reservation.Flight.DestinationAirport + "</td>";
-                        tableRows += "<td>" + new Date(reservation.Flight.DepartureTime).toLocaleDateString() + "</td>";
-                        tableRows += "<td>" + new Date(reservation.Flight.ArrivalTime).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + flight.Id + "</td>";
+                        tableRows += "<td>" + flight.Airline + "</td>";
+                        tableRows += "<td>" + flight.Departure + "</td>";
+                        tableRows += "<td>" + flight.Destination + "</td>";
+                        tableRows += "<td>" + new Date(flight.DateOfDeparture).toLocaleTimeString() + " - " + new Date(flight.DateOfDeparture).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + new Date(flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(flight.DateOfDestination).toLocaleDateString() + "</td>";
+                        tableRows += "<td>" + flight.FlightStatus + "</td>";
+                        tableRows += "<td>" + flight.Price + "</td>";
                         tableRows += "<td>" + reservation.NumberOfPassengers + "</td>";
                         tableRows += "<td>" + reservation.TotalPrice + "</td>";
-                        tableRows += "<td>" + reservation.ReservationStatus + "</td>";
                         tableRows += "</tr>";
                     });
 
-                    $("#userReservations tbody").append(tableRows); // Append rows to the table
+                    $("#userReservations tbody").append(tableRows); 
                 } else {
-                    $("#userReservations").append("<tr><td colspan='9'>No reservations found</td></tr>");
+                    $("#userReservations").append("<tr><td colspan='10'>No reservations found</td></tr>");
                 }
             }
 
+            $("#filterStatus").on("change", function () {
+                var selectedStatus = $(this).val();
+                var filteredFlights = filterFlightsByStatus(allUserFlights, selectedStatus);
+                displayUserReservations(filteredFlights);
+            });
+
             var loggedInUser = sessionStorage.getItem("LoggedInUser");
             if (loggedInUser) {
-                // Parse username from session storage
-                var username = JSON.parse(loggedInUser).username;
-                // Fetch and display user reservations
-                fetchUserReservations(username);
+                $.ajax({
+                    url: "/api/users/" + loggedInUser + "/reservations",
+                    method: "GET",
+                    success: function (reservationIds) {
+                        if (reservationIds && reservationIds.length > 0) {
+                            fetchUserFlights(reservationIds, function (flights) {
+                                displayUserReservations(flights);
+                                $("#userReservationsDiv").show(); // Show the reservations div
+                            });
+                        } else {
+                            $("#userReservationsDiv").hide(); // Hide the reservations div if no reservations
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error fetching user reservation IDs:", error);
+                    }
+                });
             } else {
-                console.log("User is not logged in."); // Handle case where user is not logged in
+                $("#userReservationsDiv").hide(); // Hide the reservations div if no user is logged in
             }
 
         });
@@ -181,22 +214,21 @@
 </head>
 <body>
     <div id="navbar"></div>
-    <form id="searchForm">
-        <label for="departureInput">Departure:</label>
-        <input type="text" id="departureInput" name="departure">
-        <label for="destinationInput">Destination:</label>
-        <input type="text" id="destinationInput" name="destination">
-        <label for="dateOfDepartureInput">Date of Departure:</label>
-        <input type="date" id="dateOfDepartureInput" name="dateOfDeparture">
-        <label for="dateOfDestinationInput">Date of Destination:</label>
-        <input type="date" id="dateOfDestinationInput" name="dateOfDestination">
-        <button type="submit">Search</button>
-    </form>
-    <button id="sortPriceButton">Sort by Price</button>
+    <h1>Active Flights</h1>
+    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+        <form id="searchForm" style="display: flex; align-items: center;">
+            <input type="text" id="departureInput" placeholder="Departure" style="width: 150px; margin-right: 10px;">
+            <input type="text" id="destinationInput" placeholder="Destination" style="width: 150px; margin-right: 10px;">
+            <input type="date" id="dateOfDepartureInput" placeholder="Date of Departure" style="width: 200px; margin-right: 10px;">
+            <input type="date" id="dateOfDestinationInput" placeholder="Date of Destination" style="width: 200px; margin-right: 10px;">
+            <button type="submit" style="padding: 10px 20px;">Search</button>
+        </form>
+        <button id="sortPriceButton" style="margin-right: 200px">Sort by Price</button>
+    </div>
     <table id="flightsTable" border="1">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Flight Id</th>
                 <th>Airline</th>
                 <th>Departure</th>
                 <th>Destination</th>
@@ -205,32 +237,43 @@
                 <th>Available Seats</th>
                 <th>Occupied Seats</th>
                 <th>Price</th>
-                <th>Buy Ticket</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            <!-- Flight rows will be dynamically added here -->
+           
         </tbody>
     </table>
 
-    <h2>User's Reservations</h2>
-    <table id="userReservations" border="1">
-        <thead>
-            <tr>
-                <th>Flight Number</th>
-                <th>Airline</th>
-                <th>Departure Airport</th>
-                <th>Destination Airport</th>
-                <th>Date of Departure</th>
-                <th>Date of Arrival</th>
-                <th>Number of Passengers</th>
-                <th>Total Price</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- User's reservation rows will be dynamically added here -->
-        </tbody>
-    </table>
+
+    <div id="userReservationsDiv" style="margin-top: 30px; display: none;">
+        <h1>My Reservations</h1>
+        <label for="filterStatus" style="margin-left: 100px;">Filter by Flight Status:</label>
+        <select id="filterStatus" style="padding: 5px; border-radius: 5px; border: 1px solid #ccc;">
+            <option value="None">None</option>
+            <option value="Active">Active</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Completed">Completed</option>
+        </select>
+        <table id="userReservations" border="1">
+            <thead>
+                <tr>
+                    <th>Flight Id</th>
+                    <th>Airline</th>
+                    <th>Departure</th>
+                    <th>Destination</th>
+                    <th>Date of Departure</th>
+                    <th>Date of Destination</th>
+                    <th>Flight Status</th>
+                    <th>Price</th>
+                    <th>Number of Passengers</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

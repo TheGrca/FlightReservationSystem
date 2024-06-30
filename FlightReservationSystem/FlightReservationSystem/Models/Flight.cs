@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace FlightReservationSystem.Models
 {
@@ -24,6 +25,7 @@ namespace FlightReservationSystem.Models
         public int AvailableSeats { get; set; }
         public int OccupiedSeats { get; set; }
         public double Price { get; set; }
+        [JsonConverter(typeof(EnumConverter))]
         public FlightStatus FlightStatus { get; set; }
 
         private static readonly string _flightsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "flights.json");

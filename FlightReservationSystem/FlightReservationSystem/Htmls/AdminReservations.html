@@ -2,9 +2,57 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title></title>
+    <title>Edit Reservations</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <script>
+        $(document).ready(function () {
+            $("#navbar").load("navbar.html");
+
+            $.ajax({
+                url: "/api/reservations",
+                method: "GET",
+                success: function (reservations) {
+                    displayReservations(reservations);
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error fetching reservations:", error);
+                }
+            });
+
+            function displayReservations(reservations) {
+                var table = "<table><tr><th>User</th><th>Flight</th><th>Number of Passengers</th><th>Total Price</th><th>Status</th><th>Action</th></tr>";
+
+                reservations.forEach(function (reservation) {
+                    var username = reservation.User ? reservation.User.Username : "Unknown";
+                    var flightInfo = reservation.Flight ? `${reservation.Flight.Departure} -> ${reservation.Flight.Destination}` : "Unknown";
+                    var editButton = reservation.ReservationStatus === "Created" ? `<button class="edit-button" data-reservation-id="${reservation.Id}">Edit</button>` : "";
+
+                    table += `<tr>
+                                        <td>${username}</td>
+                                        <td>${flightInfo}</td>
+                                        <td>${reservation.NumberOfPassengers}</td>
+                                        <td>${reservation.TotalPrice}</td>
+                                        <td>${reservation.ReservationStatus}</td>
+                                        <td>${editButton}</td>
+                                      </tr>`;
+                });
+
+                table += "</table>";
+                $("#reservationsTable").html(table);
+
+                $(".edit-button").click(function () {
+                    var reservationId = $(this).data("reservation-id");
+                    window.location.href = `AdminEditReservation.html?reservationId=${reservationId}`;
+                });
+            }
+        });
+    </script>
 </head>
 <body>
-
+    <div id="navbar"></div>
+    <h1>Edit Reservations</h1>
+    <div id="reservationsTable"></div>
 </body>
 </html>

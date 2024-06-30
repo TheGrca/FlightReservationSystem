@@ -3,32 +3,61 @@
 <head>
     <meta charset="utf-8" />
     <title>Edit Review</title>
-    <style>
-        /* Add your styles here */
-    </style>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-left: 30%;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            width: calc(100% - 20px);
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Edit Review</h1>
-    <div id="review-details">
-        <!-- Review details will be dynamically added here -->
-    </div>
-    <div>
-        <label for="review-status">Review Status:</label>
-        <select id="review-status">
-            <option value="0">Created</option>
-            <option value="1">Approved</option>
-            <option value="2">Rejected</option>
-        </select>
-        <button id="saveReview">Save</button>
+    <div id="navbar"></div>
+    <div class="container">
+        <h1>Edit Review</h1>
+        <div id="review-details">
+            
+        </div>
+        <div>
+            <label for="review-status" id="review-status-div">Change Review Status:</label>
+            <select id="review-status">
+                <option value="0">Created</option>
+                <option value="1">Approved</option>
+                <option value="2">Rejected</option>
+            </select>
+            <button id="saveReview">Save</button>
+        </div>
     </div>
 
     <script>
         $(document).ready(function () {
-            var urlParams = new URLSearchParams(window.location.search);
+            $("#navbar").load("navbar.html");
+            const urlParams = new URLSearchParams(window.location.search);
             var reviewId = urlParams.get('id');
-
-            // Function to fetch review details
             function loadReviewDetails() {
                 $.ajax({
                     type: "GET",
@@ -41,7 +70,8 @@
                                 <p><strong>Title:</strong> ${review.Title}</p>
                                 <p><strong>Content:</strong> ${review.Content}</p>
                                 <p><strong>Image Path:</strong> ${review.ImagePath}</p>
-                                <p><strong>Review Status:</strong> ${getReviewStatusText(review.ReviewStatus)}</p>
+                                <p><strong>Review Status:</strong> ${review.ReviewStatus}</p>
+
                             `);
                         $('#review-status').val(review.ReviewStatus.toString());
                     },
@@ -59,11 +89,10 @@
 
                 $.ajax({
                     type: "PUT",
-                    url: `/api/reviews/${reviewId}`,
+                    url: `/api/reviews/update/${reviewId}`,
                     contentType: "application/json",
                     data: JSON.stringify(updatedReview),
                     success: function (response) {
-                        // Redirect back to previous page or handle success
                         window.location.href = 'AdminReviews.html';
                     },
                     error: function (xhr, status, error) {
@@ -72,26 +101,10 @@
                 });
             }
 
-            // Event listener for Save button click
             $("#saveReview").click(function () {
-                saveReviewStatus(); // Call the saveReviewStatus function
+                saveReviewStatus();
             });
 
-            // Function to get review status text
-            function getReviewStatusText(status) {
-                switch (status) {
-                    case 0:
-                        return 'Created';
-                    case 1:
-                        return 'Approved';
-                    case 2:
-                        return 'Rejected';
-                    default:
-                        return 'Unknown';
-                }
-            }
-
-            // Load review details when page is ready
             loadReviewDetails();
         });
     </script>

@@ -2,41 +2,13 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>All Reviews</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        table, th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .edit-button {
-            display: inline-block;
-            padding: 5px 10px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 4px;
-        }
-
-            .edit-button.disabled {
-                background-color: #ccc;
-                pointer-events: none;
-            }
-    </style>
+    <title>Edit Reviews</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>All Reviews</h1>
+    <div id="navbar"></div>
+    <h1>Edit Reviews</h1>
     <table id="reviews-table">
         <thead>
             <tr>
@@ -45,17 +17,20 @@
                 <th>Airline</th>
                 <th>Title</th>
                 <th>Content</th>
+                <th>Image</th>
                 <th>Review Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody id="reviews-table-body">
-            <!-- Reviews will be dynamically added here -->
+           
         </tbody>
     </table>
 
     <script>
         $(document).ready(function () {
+            $("#navbar").load("navbar.html");
+
             function loadReviews() {
                 $.ajax({
                     type: "GET",
@@ -65,14 +40,9 @@
                         reviewsTable.empty();
 
                         response.forEach(function (review) {
-                            var ReviewStatus;
-                            if (review.ReviewStatus == "0") {
-                                ReviewStatus = "Created"
-                            } else if (review.ReviewStatus == "1") {
-                                ReviewStatus = "Approved"
-                            } else {
-                                ReviewStatus = "Rejected"
-                            }
+                            var imageUrl = review.ImagePath ? "/Images/" + review.ImagePath : "No Image";
+                            var imageElement = review.ImagePath ? `<img src="${imageUrl}" alt="Review Image" width="100"/>` : "No Image";
+
                             reviewsTable.append(
                                 `<tr>
                                         <td>${review.Id}</td>
@@ -80,9 +50,10 @@
                                         <td>${review.Airline.Name}</td>
                                         <td>${review.Title}</td>
                                         <td>${review.Content}</td>
-                                        <td>${ReviewStatus}</td>
+                                        <td>${imageElement}</td>  
+                                        <td>${review.ReviewStatus}</td>
                                         <td>
-                                            ${ReviewStatus === 'Created' ? `<a href="AdminEditReview.html?id=${review.Id}" class="edit-button">Edit</a>` : ''}
+                                            ${review.ReviewStatus === 'Created' ? `<a href="AdminEditReview.html?id=${review.Id}" class="edit-button">Edit</a>` : ''}
                                         </td>
                                     </tr>`
                             );

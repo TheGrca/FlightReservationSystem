@@ -72,6 +72,7 @@ namespace FlightReservationSystem.Controllers
             {
                 return NotFound();
             }
+            Debug.WriteLine(user.Gender);
             existingUser.Password = user.Password;
             existingUser.Name = user.Name;
             existingUser.Lastname = user.Lastname;
@@ -98,10 +99,6 @@ namespace FlightReservationSystem.Controllers
         [Route("api/users/login")]
         public IHttpActionResult Login([FromBody] LoginModel loginModel)
         {
-            foreach(User u in users)
-            {
-                Debug.WriteLine(u.ToString());
-            }
             var user = users.SingleOrDefault(u => u.Username == loginModel.Username && u.Password == loginModel.Password);
             if (user != null)
             {
@@ -109,7 +106,7 @@ namespace FlightReservationSystem.Controllers
                 return Ok(new
                 {
                     success = true,
-                    username = user.Username // return the username
+                    username = user.Username 
                 });
             }
             else
@@ -128,6 +125,7 @@ namespace FlightReservationSystem.Controllers
             return Ok(new { success = true, message = "Logout successful" });
         }
 
+
         [HttpPost]
         [Route("api/users/register")]
         public IHttpActionResult Register(User user)
@@ -137,21 +135,15 @@ namespace FlightReservationSystem.Controllers
                 return BadRequest("Username already exists.");
             }
 
-            if (!DateTime.TryParse(user.DateOfBirth.ToString(), out DateTime parsedDate))
-            {
-                return BadRequest("Invalid date format.");
-            }
-            user.DateOfBirth = parsedDate;
+
             user.TypeOfUser = TypeOfUser.Traveler;
-            user.Reservations = new List<Reservation>();
+            user.Reservations = new List<int>();
 
             users.Add(user);
-            // Uncomment and implement SaveUsers method to persist data
-            // SaveUsers();
             return Ok(user);
         }
 
-        [HttpPost]
+        [HttpPut]
         [Route("api/users/updateProfile")]
         public IHttpActionResult UpdateProfile(User updatedUser)
         {
@@ -160,27 +152,37 @@ namespace FlightReservationSystem.Controllers
                 var existingUser = users.FirstOrDefault(u => u.Username == updatedUser.Username);
                 if (existingUser == null)
                 {
-                    return NotFound(); // Handle case where user is not found
+                    return NotFound(); 
                 }
 
-                // Update user details (except username which is unique and should not change)
+                Debug.WriteLine("Sifra " + updatedUser.Password);
                 existingUser.Password = updatedUser.Password;
                 existingUser.Name = updatedUser.Name;
                 existingUser.Lastname = updatedUser.Lastname;
                 existingUser.Email = updatedUser.Email;
                 existingUser.DateOfBirth = updatedUser.DateOfBirth;
                 existingUser.Gender = updatedUser.Gender;
-                updatedUser.TypeOfUser = existingUser.TypeOfUser;
-
-                // Save updated users list back to JSON file
-                Models.User.SaveUsersToJson(users);
 
                 return Ok(new { success = true });
             }
             catch (Exception ex)
             {
-                return InternalServerError(ex); // Handle any exceptions
+                return InternalServerError(ex); 
             }
+        }
+
+        [HttpGet]
+        [Route("api/users/{username}/reservations")]
+        public IHttpActionResult GetUserReservationIds(string username)
+        {
+            var user = users.SingleOrDefault(u => u.Username == username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var reservationIds = user.Reservations ?? new List<int>();
+            return Ok(reservationIds);
         }
 
 

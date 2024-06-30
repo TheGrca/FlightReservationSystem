@@ -2,10 +2,66 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>AdminFlights</title>
+    <title>Edit Flights</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            margin-top: 20px;
+            margin-left: 35%;
+            margin-bottom: 20px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        form input[type="text"],
+        form input[type="datetime-local"],
+        form input[type="number"],
+        form select {
+            width: calc(100% - 20px);
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        form#filerForm {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            
+        }
+    </style>
 </head>
 <body>
-    <h1>AdminFlights Page</h1>
+    <div id="navbar"></div>
+    <h1>Edit Flights</h1>
+
+    <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
+        <form id="filerForm">
+            <label for="departureSearch">Departure:</label>
+            <input type="text" id="departureSearch"><br><br>
+            <label for="destinationSearch">Destination:</label>
+            <input type="text" id="destinationSearch"><br><br>
+            <label for="dateOfDepartureSearch">Date of Departure:</label>
+            <input type="datetime-local" id="dateOfDepartureSearch"><br><br>
+            <button type="button" id="searchButton">Search</button>
+        </form>
+    </div>
     <table>
         <thead>
             <tr>
@@ -23,169 +79,210 @@
             </tr>
         </thead>
         <tbody id="flightTableBody">
-            <!-- Table rows will be dynamically populated here -->
+           
         </tbody>
     </table>
 
-    <h1>Add New Flight</h1>
-    <form id="addFlightForm">
-        <label for="airlineSelect">Select Airline:</label>
-        <select id="airlineSelect">
-            <!-- Populate options dynamically from '/api/airlines' -->
-        </select><br><br>
-        <label for="departureInput">Departure:</label>
-        <input type="text" id="departureInput" required><br><br>
-        <label for="destinationInput">Destination:</label>
-        <input type="text" id="destinationInput" required><br><br>
-        <label for="dateOfDepartureInput">Date of Departure:</label>
-        <input type="datetime-local" id="dateOfDepartureInput" required><br><br>
-        <label for="dateOfDestinationInput">Date of Destination:</label>
-        <input type="datetime-local" id="dateOfDestinationInput" required><br><br>
-        <label for="priceInput">Price:</label>
-        <input type="number" id="priceInput" min="1" step="any" required><br><br>
-        <label for="totalSeatsInput">Number of seats: </label>
-        <input type="number" id="totalSeatsInput" min="1" required><br><br>
-        <button type="submit">Add Flight</button>
-    </form>
 
+    <div class="form-container">
+        <h1>Add New Flight</h1>
+        <form id="addFlightForm">
+            <label for="airlineSelect">Select Airline:</label>
+            <select id="airlineSelect">
+                
+            </select>
+            <label for="departureInput">Departure:</label>
+            <input type="text" id="departureInput" required>
+            <label for="destinationInput">Destination:</label>
+            <input type="text" id="destinationInput" required>
+            <label for="dateOfDepartureInput">Date of Departure:</label>
+            <input type="datetime-local" id="dateOfDepartureInput" required>
+            <label for="dateOfDestinationInput">Date of Destination:</label>
+            <input type="datetime-local" id="dateOfDestinationInput" required>
+            <label for="priceInput">Price:</label>
+            <input type="number" id="priceInput" min="1" step="any" required>
+            <label for="totalSeatsInput">Number of seats: </label>
+            <input type="number" id="totalSeatsInput" min="1" required>
+            <button type="submit">Add Flight</button>
+        </form>
+    </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            fetchFlights();
-            populateAirlines();
-        });
-        // Fetch flights from API and dynamically populate table
-        function fetchFlights() {
-            fetch('/api/flights')
-                .then(response => response.json())
-                .then(data => {
-                    const flightTableBody = document.getElementById('flightTableBody');
-                    flightTableBody.innerHTML = '';
-                    data.forEach(flight => {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `
-                            <td>${flight.Id}</td>
-                            <td>${flight.Airline}</td>
-                            <td>${flight.Departure}</td>
-                            <td>${flight.Destination}</td>
-                            <td>${flight.DateOfDeparture}</td>
-                            <td>${flight.DateOfDestination}</td>
-                            <td>${flight.AvailableSeats}</td>
-                            <td>${flight.OccupiedSeats}</td>
-                            <td>${flight.Price}</td>
-                            <td>${flight.FlightStatus}</td>
-                            <td>
-                                <button onclick="editFlight(${flight.Id})">Edit</button>
-                                <button onclick="deleteFlight(${flight.Id})">Delete</button>
-                            </td>
-                        `;
-                        flightTableBody.appendChild(row);
-                    });
-                })
-                .catch(error => console.error('Error fetching flights:', error));
-        }
-        function editFlight(id) {
-            window.location.href = `/AdminEditFlight.html?Id=${id}`;
-        }
-
-        function populateAirlines() {
-            fetch('/api/airlines')
-                .then(response => response.json())
-                .then(data => {
-                    const airlineSelect = document.getElementById('airlineSelect');
-                    data.forEach(airline => {
-                        const option = document.createElement('option');
-                        option.value = airline.Id;
-                        option.textContent = airline.Name;
-                        airlineSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching airlines:', error));
-        }
-
-        // Handle form submission
-        document.getElementById('addFlightForm').addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            var airlineSelect = document.getElementById('airlineSelect');
-            var departureInput = document.getElementById('departureInput');
-            var destinationInput = document.getElementById('destinationInput');
-            var dateOfDepartureInput = document.getElementById('dateOfDepartureInput');
-            var dateOfDestinationInput = document.getElementById('dateOfDestinationInput');
-            var priceInput = document.getElementById('priceInput');
-            var totalSeatsInput = document.getElementById('totalSeatsInput');
-
-            if (!airlineSelect.value || !departureInput.value || !destinationInput.value ||
-                !dateOfDepartureInput.value || !dateOfDestinationInput.value || !priceInput.value ||
-                !totalSeatsInput.value) {
-                alert("Please fill in all fields.");
-                return;
+        $(document).ready(function () {
+            $("#navbar").load("navbar.html");
+            
+            function fetchFlights() {
+                $.ajax({
+                    url: '/api/flights',
+                    method: 'GET',
+                    success: function (data) {
+                        const flightTableBody = $('#flightTableBody');
+                        flightTableBody.empty();
+                        data.forEach(function (flight) {
+                            flightTableBody.append(`
+                                                    <tr>
+                                                        <td>${flight.Id}</td>
+                                                        <td>${flight.Airline}</td>
+                                                        <td>${flight.Departure}</td>
+                                                        <td>${flight.Destination}</td>
+                                                        <td>${new Date(flight.DateOfDeparture).toLocaleTimeString() + " - " + new Date(flight.DateOfDeparture).toLocaleDateString()}</td>
+                                                        <td>${new Date(flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(flight.DateOfDestination).toLocaleDateString()}</td>
+                                                        <td>${flight.AvailableSeats}</td>
+                                                        <td>${flight.OccupiedSeats}</td>
+                                                        <td>${flight.Price}</td>
+                                                        <td>${flight.FlightStatus}</td>
+                                                        <td>
+                                                            <button class="editBtn" data-id="${flight.Id}">Edit</button>
+                                                            <button class="deleteBtn" data-id="${flight.Id}">Delete</button>
+                                                        </td>
+                                                    </tr>
+                                                `);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching flights:', error);
+                    }
+                });
             }
 
-            var newFlight = {
-                Airline: airlineSelect.value,
-                Departure: departureInput.value,
-                Destination: destinationInput.value,
-                DateOfDeparture: dateOfDepartureInput.value,
-                DateOfDestination: dateOfDestinationInput.value,
-                Price: parseFloat(priceInput.value),
-                FlightStatus: 'Active',
-                AvailableSeats: parseInt(totalSeatsInput.value),
-                OccupiedSeats: 0
-            };
-
-            fetch('/api/flights', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(newFlight)
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to add flight. Server responded with ' + response.status);
-                    }
-                    alert('Flight added successfully!');
-                    fetchFlights();
-                    document.getElementById('addFlightForm').reset();
-                })
-                .catch(error => {
-                    console.error('Error adding flight:', error);
-                    alert('Failed to add flight. Please check console for details.');
-                });
-        });
-
-        let reservations = [];
-
-        fetch('/api/reservations')
-            .then(response => response.json())
-            .then(data => {
-                reservations = data;
-                console.log('Reservations fetched:', reservations);
-            })
-            .catch(error => console.error('Error fetching reservations:', error));
-
-        function deleteFlight(id) {
-            fetch(`/api/flights/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(reservations)
-            })
-                .then(response => {
-                    if (response.ok) {
-                        alert('Flight deleted successfully!');
-                        // Optionally refresh the flight list or perform other actions
-                        fetchFlights();
-                    } else {
-                        return response.json().then(error => {
-                            throw new Error(error.message);
+            function populateAirlines() {
+                $.ajax({
+                    url: '/api/airlines',
+                    method: 'GET',
+                    success: function (data) {
+                        const airlineSelect = $('#airlineSelect');
+                        airlineSelect.empty();
+                        data.forEach(function (airline) {
+                            airlineSelect.append(`<option value="${airline.Id}">${airline.Name}</option>`);
                         });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching airlines:', error);
                     }
-                })
-                .catch(error => alert('Error deleting flight: ' + error.message));
-        }
+                });
+            }
 
+            $('#addFlightForm').submit(function (event) {
+                event.preventDefault();
+
+                const airlineSelect = $('#airlineSelect');
+                const departureInput = $('#departureInput');
+                const destinationInput = $('#destinationInput');
+                const dateOfDepartureInput = $('#dateOfDepartureInput');
+                const dateOfDestinationInput = $('#dateOfDestinationInput');
+                const priceInput = $('#priceInput');
+                const totalSeatsInput = $('#totalSeatsInput');
+
+                if (!airlineSelect.val() || !departureInput.val() || !destinationInput.val() ||
+                    !dateOfDepartureInput.val() || !dateOfDestinationInput.val() || !priceInput.val() ||
+                    !totalSeatsInput.val()) {
+                    alert("Please fill in all fields.");
+                    return;
+                }
+
+                const newFlight = {
+                    Airline: $('#airlineSelect').find(':selected').text(),
+                    Departure: departureInput.val(),
+                    Destination: destinationInput.val(),
+                    DateOfDeparture: dateOfDepartureInput.val(),
+                    DateOfDestination: dateOfDestinationInput.val(),
+                    Price: parseFloat(priceInput.val()),
+                    FlightStatus: 'Active',
+                    AvailableSeats: parseInt(totalSeatsInput.val()),
+                    OccupiedSeats: 0
+                };
+
+                $.ajax({
+                    url: '/api/flights',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(newFlight),
+                    success: function () {
+                        alert('Flight added successfully!');
+                        fetchFlights();
+                        $('#addFlightForm')[0].reset();
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding flight:', error);
+                        alert('Failed to add flight. Please check console for details.');
+                    }
+                });
+            });
+
+            $('#flightTableBody').on('click', '.editBtn', function () {
+                const flightId = $(this).data('id');
+                window.location.href = `AdminEditFlight.html?Id=${flightId}`;
+            });
+
+            $('#flightTableBody').on('click', '.deleteBtn', function () {
+                const flightId = $(this).data('id');
+
+                // Confirm deletion
+                if (confirm(`Are you sure you want to delete flight ID ${flightId}?`)) {
+                    $.ajax({
+                        url: `/api/flights/${flightId}`,
+                        method: 'DELETE',
+                        success: function () {
+                            alert('Flight deleted successfully!');
+                            fetchFlights(); 
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting flight:', error);
+                            alert('Failed to delete flight. Flight has active reservations');
+                        }
+                    });
+                }
+            });
+
+            fetchFlights();
+            populateAirlines();
+
+            
+            $('#searchButton').click(function () {
+                const departureSearch = $('#departureSearch').val().trim().toLowerCase();
+                const destinationSearch = $('#destinationSearch').val().trim().toLowerCase();
+                const dateOfDepartureSearch = $('#dateOfDepartureSearch').val().trim();
+
+                $.ajax({
+                    url: '/api/flights',
+                    method: 'GET',
+                    success: function (data) {
+                        const filteredFlights = data.filter(function (flight) {
+                            const departureMatch = flight.Departure.toLowerCase().includes(departureSearch);
+                            const destinationMatch = flight.Destination.toLowerCase().includes(destinationSearch);
+                            const dateOfDepartureMatch = new Date(flight.DateOfDeparture).toLocaleDateString().includes(dateOfDepartureSearch);
+
+                            return departureMatch && destinationMatch && dateOfDepartureMatch;
+                        });
+
+                        const flightTableBody = $('#flightTableBody');
+                        flightTableBody.empty();
+                        filteredFlights.forEach(function (flight) {
+                            flightTableBody.append(`
+                                                        <tr>
+                                                            <td>${flight.Id}</td>
+                                                            <td>${flight.Airline}</td>
+                                                            <td>${flight.Departure}</td>
+                                                            <td>${flight.Destination}</td>
+                                                            <td>${new Date(flight.DateOfDeparture).toLocaleTimeString() + " - " + new Date(flight.DateOfDeparture).toLocaleDateString()}</td>
+                                                            <td>${new Date(flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(flight.DateOfDestination).toLocaleDateString()}</td>
+                                                            <td>${flight.AvailableSeats}</td>
+                                                            <td>${flight.OccupiedSeats}</td>
+                                                            <td>${flight.Price}</td>
+                                                            <td>${flight.FlightStatus}</td>
+                                                            <td>
+                                                                <button class="editBtn" data-id="${flight.Id}">Edit</button>
+                                                                <button class="deleteBtn" data-id="${flight.Id}">Delete</button>
+                                                            </td>
+                                                        </tr>
+                                                    `);
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching flights:', error);
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>

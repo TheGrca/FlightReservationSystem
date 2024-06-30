@@ -16,10 +16,12 @@ namespace FlightReservationSystem.Models
     }
     public class Reservation
     {
-        public string User { get; set; }
+        public int Id {  get; set; }    
+        public User User { get; set; }
         public Flight Flight { get; set; }
         public int NumberOfPassengers { get; set; }
         public double TotalPrice { get; set; }
+        [JsonConverter(typeof(EnumConverter))]
         public ReservationStatus ReservationStatus { get; set; }
         private static readonly string _reservationsFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Database", "reservations.json");
         public Reservation() { }

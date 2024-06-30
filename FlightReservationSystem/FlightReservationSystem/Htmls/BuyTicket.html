@@ -3,14 +3,73 @@
 <head>
     <meta charset="utf-8" />
     <title>Buy Ticket</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff; 
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .flight-info {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .ticket-form {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+            .ticket-form label {
+                font-weight: bold;
+                margin-right: 10px;
+            }
+
+            .ticket-form select {
+                padding: 8px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                font-size: 14px;
+                width: 150px;
+            }
+            .ticket-form button {
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+                .ticket-form button:hover {
+                    background-color: #0056b3;
+                }
+     
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
     <script>
         $(document).ready(function () {
-
             $("#navbar").load("navbar.html");
-
             var urlParams = new URLSearchParams(window.location.search);
+
             var flightId = urlParams.get('flightId');
+            var username = sessionStorage.getItem("LoggedInUser");
 
             function fetchFlightDetails(flightId) {
                 $.ajax({
@@ -28,8 +87,8 @@
             function displayFlightDetails(flight) {
                 $("#flightInfo").text(
                     flight.Departure + " -> " + flight.Destination + " : " +
-                    new Date(flight.DateOfDeparture).toLocaleDateString() + " -> " +
-                    new Date(flight.DateOfDestination).toLocaleDateString()
+                    new Date(flight.DateOfDeparture).toLocaleTimeString() + " - " + new Date(flight.DateOfDeparture).toLocaleDateString() + " -> " +
+                    new Date(flight.DateOfDestination).toLocaleTimeString() + " - " + new Date(flight.DateOfDestination).toLocaleDateString() 
                 );
 
                 var options = "";
@@ -39,14 +98,33 @@
                 $("#ticketCount").html(options);
             }
 
-            function updateSeatsAndRedirect(flightId, tickets) {
+            function createReservation(flightId, tickets) {
+                $.ajax({
+                    url: "/api/reservations",
+                    method: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({
+                        username: sessionStorage.getItem("LoggedInUser"),
+                        flightId: flightId,
+                        numberOfPassengers: tickets
+                    }),
+                    success: function () {
+                        window.location.href = "ThankYou.html";
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Error creating reservation:", error);
+                    }
+                });
+            }
+
+            function updateSeatsAndCreateReservation(flightId, tickets) {
                 $.ajax({
                     url: "/api/flights/updateSeats",
                     method: "POST",
                     contentType: "application/json",
                     data: JSON.stringify({ flightId: flightId, tickets: tickets }),
                     success: function () {
-                        window.location.href = "ThankYou.html";
+                        createReservation(flightId, tickets);
                     },
                     error: function (xhr, status, error) {
                         console.error("Error updating seats:", error);
@@ -56,20 +134,23 @@
 
             $("#buyButton").on("click", function () {
                 var tickets = $("#ticketCount").val();
-                updateSeatsAndRedirect(flightId, tickets);
+                updateSeatsAndCreateReservation(flightId, tickets);
             });
 
-            // Fetch and display flight details on page load
             fetchFlightDetails(flightId);
         });
     </script>
 </head>
 <body>
     <div id="navbar"></div>
-    <h1>Buy Ticket</h1>
-    <div id="flightInfo"></div>
-    <label for="ticketCount">Number of Tickets:</label>
-    <select id="ticketCount"></select>
-    <button id="buyButton">Buy</button>
+    <div class="container">
+        <h1>Buy Ticket</h1>
+        <div id="flightInfo" class="flight-info"></div>
+        <div class="ticket-form">
+            <label for="ticketCount">Number of Tickets:</label>
+            <select id="ticketCount" class="ticket-count"></select>
+            <button id="buyButton" class="buy-button">Buy</button>
+        </div>
+    </div>
 </body>
 </html>

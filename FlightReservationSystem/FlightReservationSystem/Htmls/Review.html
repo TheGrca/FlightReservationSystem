@@ -1,15 +1,73 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>Leave a Review</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Page</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>$(document).ready(function() {
+    <script>
+        $(document).ready(function () {
             $("#navbar").load("navbar.html");
-        });</script>
+            $.ajax({
+                url: '/api/reservations/user/' + sessionStorage.getItem("LoggedInUser"),
+                method: 'GET',
+                success: function (reservations) {
+                    displayCompletedFlights(reservations);
+                },
+                error: function () {
+                    console.error('Failed to fetch reservations');
+                }
+            });
+        });
+
+        function displayCompletedFlights(reservations) {
+            var completedFlights = reservations.filter(function (reservation) {
+                return reservation.Flight.FlightStatus === "Completed";
+            });
+
+            var tableBody = $('#flights-table tbody');
+            tableBody.empty();
+
+            completedFlights.forEach(function (reservation) {
+                var flight = reservation.Flight;
+                var row = `
+                            <tr>
+                                <td>${flight.Airline}</td>
+                                <td>${flight.Departure}</td>
+                                <td>${flight.Destination}</td>
+                                <td>${new Date(flight.DateOfDeparture).toLocaleDateString()}</td>
+                                <td>${new Date(flight.DateOfDestination).toLocaleDateString()}</td>
+                                <td><button onclick="navigateToReview('${flight.Airline}')">Leave a Review</button></td>
+                            </tr>
+                        `;
+                tableBody.append(row);
+            });
+        }
+
+        function navigateToReview(airline) {
+            window.location.href = 'MakeAReview.html?airline=' + encodeURIComponent(airline);
+        }
+    </script>
 </head>
 <body>
     <div id="navbar"></div>
-    <h1>Leave a Review Page</h1>
+    <h1>Your Completed Flights</h1>
+    <table id="flights-table" border="1">
+        <thead>
+            <tr>
+                <th>Airline</th>
+                <th>Departure</th>
+                <th>Destination</th>
+                <th>Date of Departure</th>
+                <th>Date of Destination</th>
+                <th>Review</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+    </table>
 </body>
 </html>

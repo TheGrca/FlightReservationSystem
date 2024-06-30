@@ -1,262 +1,662 @@
 [
-    {
-        "Id": 1,
-        "Reviewer": {
-            "Username": "User1",
-            "Password": "123",
-            "Name": "User1",
-            "Lastname": "User1",
-            "Email": "user1@gmail.com",
-            "DateOfBirth": "2000-10-20",
-            "Gender": "Male",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 1,
-            "Name": "Emirates",
-            "Address": "Dubai, UAE",
-            "Contact": "contact@emirates.com",
-            "Flights": [1, 10],
-            "Reviews": []
-        },
-        "Title": "Great Experience",
-        "Content": "The flight was smooth and the service was excellent.",
-        "ImagePath": "/images/review1.jpg",
-        "ReviewStatus": "Created"
+  {
+    "Id": 1,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "User1",
+      "Lastname": "User1",
+      "Email": "user1@gmail.com",
+      "DateOfBirth": "2000-10-20T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
     },
-    {
-        "Id": 2,
-        "Reviewer": {
-            "Username": "User2",
-            "Password": "123",
-            "Name": "User2",
-            "Lastname": "User2",
-            "Email": "User2@gmail.com",
-            "DateOfBirth": "2002-12-15",
-            "Gender": "Female",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 2,
-            "Name": "Lufthansa",
-            "Address": "Cologne, Germany",
-            "Contact": "contact@lufthansa.com",
-            "Flights": [3],
-            "Reviews": []
-        },
-        "Title": "Comfortable Flight",
-        "Content": "I enjoyed the comfortable seats and friendly staff.",
-        "ImagePath": "/images/review2.jpg",
-        "ReviewStatus": "Approved"
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
     },
-    {
-        "Id": 3,
-        "Reviewer": {
-            "Username": "User1",
-            "Password": "123",
-            "Name": "User1",
-            "Lastname": "User1",
-            "Email": "user1@gmail.com",
-            "DateOfBirth": "2000-10-20",
-            "Gender": "Male",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 3,
-            "Name": "American Airlines",
-            "Address": "Fort Worth, Texas, USA",
-            "Contact": "contact@aa.com",
-            "Flights": [6],
-            "Reviews": []
-        },
-        "Title": "Average Service",
-        "Content": "The service was average, but the flight was on time.",
-        "ImagePath": "/images/review3.jpg",
-        "ReviewStatus": "Created"
+    "Title": "Great Experience",
+    "Content": "The flight was smooth and the service was excellent.",
+    "ImagePath": "/images/review1.jpg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 2,
+    "Reviewer": {
+      "Username": "User2",
+      "Password": "123",
+      "Name": "User2",
+      "Lastname": "User2",
+      "Email": "User2@gmail.com",
+      "DateOfBirth": "2002-12-15T00:00:00",
+      "Gender": "Female",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
     },
-    {
-        "Id": 4,
-        "Reviewer": {
-            "Username": "User2",
-            "Password": "123",
-            "Name": "User2",
-            "Lastname": "User2",
-            "Email": "User2@gmail.com",
-            "DateOfBirth": "2002-12-15",
-            "Gender": "Female",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 4,
-            "Name": "Turkish Airlines",
-            "Address": "Istanbul, Turkey",
-            "Contact": "contact@turkishairlines.com",
-            "Flights": [11],
-            "Reviews": []
-        },
-        "Title": "Great Food",
-        "Content": "The food was excellent and the flight was comfortable.",
-        "ImagePath": "/images/review4.jpg",
-        "ReviewStatus": "Created"
+    "Airline": {
+      "Id": 2,
+      "Name": "Lufthansa",
+      "Address": "Cologne, Germany",
+      "Contact": "contact@lufthansa.com",
+      "Flights": [
+        3
+      ],
+      "Reviews": []
     },
-    {
-        "Id": 5,
-        "Reviewer": {
-            "Username": "User1",
-            "Password": "123",
-            "Name": "User1",
-            "Lastname": "User1",
-            "Email": "user1@gmail.com",
-            "DateOfBirth": "2000-10-20",
-            "Gender": "Male",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 5,
-            "Name": "Ryanair",
-            "Address": "Dublin, Ireland",
-            "Contact": "contact@ryanair.com",
-            "Flights": [14],
-            "Reviews": []
-        },
-        "Title": "Budget Airline",
-        "Content": "You get what you pay for, it's a budget airline.",
-        "ImagePath": "/images/review5.jpg",
-        "ReviewStatus": "Approved"
+    "Title": "Comfortable Flight",
+    "Content": "I enjoyed the comfortable seats and friendly staff.",
+    "ImagePath": "/images/review2.jpg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 3,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "User1",
+      "Lastname": "User1",
+      "Email": "user1@gmail.com",
+      "DateOfBirth": "2000-10-20T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
     },
-    {
-        "Id": 6,
-        "Reviewer": {
-            "Username": "User2",
-            "Password": "123",
-            "Name": "User2",
-            "Lastname": "User2",
-            "Email": "User2@gmail.com",
-            "DateOfBirth": "2002-12-15",
-            "Gender": "Female",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 6,
-            "Name": "AirSerbia",
-            "Address": "Belgrade, Serbia",
-            "Contact": "contact@airserbia.com",
-            "Flights": [],
-            "Reviews": []
-        },
-        "Title": "Nice Crew",
-        "Content": "The crew was very nice and the flight was on time.",
-        "ImagePath": "/images/review6.jpg",
-        "ReviewStatus": "Created"
+    "Airline": {
+      "Id": 3,
+      "Name": "American Airlines",
+      "Address": "Fort Worth, Texas, USA",
+      "Contact": "contact@aa.com",
+      "Flights": [
+        6
+      ],
+      "Reviews": []
     },
-    {
-        "Id": 7,
-        "Reviewer": {
-            "Username": "User1",
-            "Password": "123",
-            "Name": "User1",
-            "Lastname": "User1",
-            "Email": "user1@gmail.com",
-            "DateOfBirth": "2000-10-20",
-            "Gender": "Male",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 1,
-            "Name": "Emirates",
-            "Address": "Dubai, UAE",
-            "Contact": "contact@emirates.com",
-            "Flights": [1, 10],
-            "Reviews": []
-        },
-        "Title": "Luxury Experience",
-        "Content": "Flying with Emirates is always a luxury experience.",
-        "ImagePath": "/images/review7.jpg",
-        "ReviewStatus": "Rejected"
+    "Title": "Average Service",
+    "Content": "The service was average, but the flight was on time.",
+    "ImagePath": "/images/review3.jpg",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 4,
+    "Reviewer": {
+      "Username": "User2",
+      "Password": "123",
+      "Name": "User2",
+      "Lastname": "User2",
+      "Email": "User2@gmail.com",
+      "DateOfBirth": "2002-12-15T00:00:00",
+      "Gender": "Female",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
     },
-    {
-        "Id": 8,
-        "Reviewer": {
-            "Username": "User2",
-            "Password": "123",
-            "Name": "User2",
-            "Lastname": "User2",
-            "Email": "User2@gmail.com",
-            "DateOfBirth": "2002-12-15",
-            "Gender": "Female",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 2,
-            "Name": "Lufthansa",
-            "Address": "Cologne, Germany",
-            "Contact": "contact@lufthansa.com",
-            "Flights": [3],
-            "Reviews": []
-        },
-        "Title": "Good Service",
-        "Content": "The service was good and the flight was smooth.",
-        "ImagePath": "/images/review8.jpg",
-        "ReviewStatus":"Rejected"
+    "Airline": {
+      "Id": 4,
+      "Name": "Turkish Airlines",
+      "Address": "Istanbul, Turkey",
+      "Contact": "contact@turkishairlines.com",
+      "Flights": [
+        11
+      ],
+      "Reviews": []
     },
-    {
-        "Id": 9,
-        "Reviewer": {
-            "Username": "User1",
-            "Password": "123",
-            "Name": "User1",
-            "Lastname": "User1",
-            "Email": "user1@gmail.com",
-            "DateOfBirth": "2000-10-20",
-            "Gender": "Male",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 3,
-            "Name": "American Airlines",
-            "Address": "Fort Worth, Texas, USA",
-            "Contact": "contact@aa.com",
-            "Flights": [6],
-            "Reviews": []
-        },
-        "Title": "Okay Flight",
-        "Content": "It was an okay flight, nothing special.",
-        "ImagePath": "/images/review9.jpg",
-        "ReviewStatus": "Approved"
+    "Title": "Great Food",
+    "Content": "The food was excellent and the flight was comfortable.",
+    "ImagePath": "/images/review4.jpg",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 5,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "User1",
+      "Lastname": "User1",
+      "Email": "user1@gmail.com",
+      "DateOfBirth": "2000-10-20T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
     },
-    {
-        "Id": 10,
-        "Reviewer": {
-            "Username": "User2",
-            "Password": "123",
-            "Name": "User2",
-            "Lastname": "User2",
-            "Email": "User2@gmail.com",
-            "DateOfBirth": "2002-12-15",
-            "Gender": "Female",
-            "TypeOfUser": "Traveler",
-            "Reservations": []
-        },
-        "Airline": {
-            "Id": 4,
-            "Name": "Turkish Airlines",
-            "Address": "Istanbul, Turkey",
-            "Contact": "contact@turkishairlines.com",
-            "Flights": [11],
-            "Reviews": []
-        },
-        "Title": "Best Airline",
-        "Content": "Turkish Airlines is the best airline I've flown with.",
-        "ImagePath": "/images/review10.jpg",
-        "ReviewStatus": "Approved"
-    }
+    "Airline": {
+      "Id": 5,
+      "Name": "Ryanair",
+      "Address": "Dublin, Ireland",
+      "Contact": "contact@ryanair.com",
+      "Flights": [
+        14
+      ],
+      "Reviews": []
+    },
+    "Title": "Budget Airline",
+    "Content": "You get what you pay for, it's a budget airline.",
+    "ImagePath": "/images/review5.jpg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 6,
+    "Reviewer": {
+      "Username": "User2",
+      "Password": "123",
+      "Name": "User2",
+      "Lastname": "User2",
+      "Email": "User2@gmail.com",
+      "DateOfBirth": "2002-12-15T00:00:00",
+      "Gender": "Female",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
+    },
+    "Airline": {
+      "Id": 6,
+      "Name": "AirSerbia",
+      "Address": "Belgrade, Serbia",
+      "Contact": "contact@airserbia.com",
+      "Flights": [],
+      "Reviews": []
+    },
+    "Title": "Nice Crew",
+    "Content": "The crew was very nice and the flight was on time.",
+    "ImagePath": "/images/review6.jpg",
+    "ReviewStatus": "Rejected"
+  },
+  {
+    "Id": 7,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "User1",
+      "Lastname": "User1",
+      "Email": "user1@gmail.com",
+      "DateOfBirth": "2000-10-20T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "Luxury Experience",
+    "Content": "Flying with Emirates is always a luxury experience.",
+    "ImagePath": "/images/review7.jpg",
+    "ReviewStatus": "Rejected"
+  },
+  {
+    "Id": 8,
+    "Reviewer": {
+      "Username": "User2",
+      "Password": "123",
+      "Name": "User2",
+      "Lastname": "User2",
+      "Email": "User2@gmail.com",
+      "DateOfBirth": "2002-12-15T00:00:00",
+      "Gender": "Female",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
+    },
+    "Airline": {
+      "Id": 2,
+      "Name": "Lufthansa",
+      "Address": "Cologne, Germany",
+      "Contact": "contact@lufthansa.com",
+      "Flights": [
+        3
+      ],
+      "Reviews": []
+    },
+    "Title": "Good Service",
+    "Content": "The service was good and the flight was smooth.",
+    "ImagePath": "/images/review8.jpg",
+    "ReviewStatus": "Rejected"
+  },
+  {
+    "Id": 9,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "User1",
+      "Lastname": "User1",
+      "Email": "user1@gmail.com",
+      "DateOfBirth": "2000-10-20T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
+    },
+    "Airline": {
+      "Id": 3,
+      "Name": "American Airlines",
+      "Address": "Fort Worth, Texas, USA",
+      "Contact": "contact@aa.com",
+      "Flights": [
+        6
+      ],
+      "Reviews": []
+    },
+    "Title": "Okay Flight",
+    "Content": "It was an okay flight, nothing special.",
+    "ImagePath": "/images/review9.jpg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 11,
+    "Reviewer": {
+      "Username": "User2",
+      "Password": "123",
+      "Name": "User2",
+      "Lastname": "User1",
+      "Email": "user1@gmail.com",
+      "DateOfBirth": "2000-10-20T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
+    },
+    "Airline": {
+      "Id": 3,
+      "Name": "American Airlines",
+      "Address": "Fort Worth, Texas, USA",
+      "Contact": "contact@aa.com",
+      "Flights": [
+        6
+      ],
+      "Reviews": []
+    },
+    "Title": "BAD",
+    "Content": "Very bad flight",
+    "ImagePath": "/images/review9.jpg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 10,
+    "Reviewer": {
+      "Username": "User2",
+      "Password": "123",
+      "Name": "User2",
+      "Lastname": "User2",
+      "Email": "User2@gmail.com",
+      "DateOfBirth": "2002-12-15T00:00:00",
+      "Gender": "Female",
+      "TypeOfUser": "Traveler",
+      "Reservations": []
+    },
+    "Airline": {
+      "Id": 4,
+      "Name": "Turkish Airlines",
+      "Address": "Istanbul, Turkey",
+      "Contact": "contact@turkishairlines.com",
+      "Flights": [
+        11
+      ],
+      "Reviews": []
+    },
+    "Title": "Best Airline",
+    "Content": "Turkish Airlines is the best airline I've flown with.",
+    "ImagePath": "/images/review10.jpg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 12,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "John",
+      "Lastname": "Doe",
+      "Email": "john.doe@example.com",
+      "DateOfBirth": "1990-01-01T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0
+      ]
+    },
+    "Airline": {
+      "Id": 2,
+      "Name": "Lufthansa",
+      "Address": "Cologne, Germany",
+      "Contact": "contact@lufthansa.com",
+      "Flights": [
+        3
+      ],
+      "Reviews": []
+    },
+    "Title": "Very Good",
+    "Content": "Smooth flight",
+    "ImagePath": "",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 13,
+    "Reviewer": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "John",
+      "Lastname": "Doe",
+      "Email": "john.doe@example.com",
+      "DateOfBirth": "1990-01-01T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1
+      ]
+    },
+    "Airline": {
+      "Id": 2,
+      "Name": "Lufthansa",
+      "Address": "Cologne, Germany",
+      "Contact": "contact@lufthansa.com",
+      "Flights": [
+        3
+      ],
+      "Reviews": []
+    },
+    "Title": "Bad flight",
+    "Content": "Disaster",
+    "ImagePath": "",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 14,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1
+      ]
+    },
+    "Airline": {
+      "Id": 7,
+      "Name": "WizzAir",
+      "Address": "Budapest, Hungary",
+      "Contact": "contact@wizzair.com",
+      "Flights": [],
+      "Reviews": []
+    },
+    "Title": "Nice",
+    "Content": "Nice staff and flight",
+    "ImagePath": "hp wall black 1.jpeg",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 15,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "Bad",
+    "Content": "Very bad flight",
+    "ImagePath": "review1.png",
+    "ReviewStatus": "Approved"
+  },
+  {
+    "Id": 16,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Airline": {
+      "Id": 7,
+      "Name": "WizzAir",
+      "Address": "Budapest, Hungary",
+      "Contact": "contact@wizzair.com",
+      "Flights": [],
+      "Reviews": []
+    },
+    "Title": "Could be better",
+    "Content": "Good, but not too good",
+    "ImagePath": "",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 17,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "Loved it!",
+    "Content": "The flight was awesome!",
+    "ImagePath": "review2.jfif",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 18,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "Test",
+    "Content": "test",
+    "ImagePath": "",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 19,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "test",
+    "Content": "test",
+    "ImagePath": "",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 20,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "test",
+    "Content": "test",
+    "ImagePath": "",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 21,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "Airline": {
+      "Id": 1,
+      "Name": "Emirates",
+      "Address": "Dubai, UAE",
+      "Contact": "contact@emirates.com",
+      "Flights": [
+        1,
+        10
+      ],
+      "Reviews": []
+    },
+    "Title": "Test",
+    "Content": "test",
+    "ImagePath": "review2.jfif",
+    "ReviewStatus": "Created"
+  },
+  {
+    "Id": 22,
+    "Reviewer": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    "Airline": {
+      "Id": 7,
+      "Name": "WizzAir",
+      "Address": "Budapest, Hungary",
+      "Contact": "contact@wizzair.com",
+      "Flights": [],
+      "Reviews": []
+    },
+    "Title": "Test2",
+    "Content": "test",
+    "ImagePath": "review2.jfif",
+    "ReviewStatus": "Created"
+  }
 ]

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Web.Http;
 using FlightReservationSystem.Models;
 
@@ -22,6 +24,7 @@ namespace FlightReservationSystem.Controllers
             }
         }
 
+        //Api for getting all the flights
         // GET: api/Flights
         [HttpGet]
         [Route("api/flights")]
@@ -35,8 +38,10 @@ namespace FlightReservationSystem.Controllers
             return Ok(flights);
         }
 
+        //Api for getting one flight by its id
         // GET: api/Flights/{id}
         [HttpGet]
+        [Route("api/flights/{id}")]
         public IHttpActionResult GetFlight(int id)
         {
             var flight = flights.SingleOrDefault(f => f.Id == id);
@@ -47,62 +52,80 @@ namespace FlightReservationSystem.Controllers
             return Ok(flight);
         }
 
+        //Api for adding a flight
         [HttpPost]
         [Route("api/flights")]
         public IHttpActionResult AddFlight([FromBody] Flight newFlight)
         {
-            if(newFlight == null)
+            var airlines = System.Web.HttpContext.Current.Application["Airlines"] as List<Airline>;
+            if (newFlight == null || airlines == null)
             {
                 return BadRequest();
             }
-            // Find the highest current ID in flights list
+
             int maxId = flights.Max(f => f.Id);
 
-            // Increment the ID for the new flight
             newFlight.Id = maxId + 1;
-
-            // Set other properties for the new flight
             newFlight.FlightStatus = FlightStatus.Active;
             newFlight.OccupiedSeats = 0;
-
-            // Add the new flight to the flights list
             flights.Add(newFlight);
 
-            // Return HTTP 201 Created status with the newly added flight
+            var airline = airlines.FirstOrDefault(a => a.Name == newFlight.Airline);
+            if (airline != null)
+            {
+                if (airline.Flights == null)
+                {
+                    airline.Flights = new List<int>();
+                }
+                airline.Flights.Add(newFlight.Id);
+            }
             return Created($"api/flights/{newFlight.Id}", newFlight);
         }
 
-
-        // POST: api/Flights
-        [HttpPost]
-        public IHttpActionResult PostFlight(Flight flight)
-        {
-            flight.Id = flights.Count > 0 ? flights.Max(f => f.Id) + 1 : 1;
-            flight.FlightStatus = FlightStatus.Active;
-            flights.Add(flight);
-            return CreatedAtRoute("DefaultApi", new { id = flight.Id }, flight);
-        }
-
-        // PUT: api/Flights/{id}
+        //Api for updating a flight
+        // PUT: api/flights/{id}
         [HttpPut]
-        public IHttpActionResult PutFlight(int id, Flight flight)
+        [Route("api/flights/{id}")]
+        public IHttpActionResult PutFlight(int id, Flight updatedFlight)
         {
             var existingFlight = flights.SingleOrDefault(f => f.Id == id);
             if (existingFlight == null)
             {
                 return NotFound();
             }
-            if (existingFlight.FlightStatus == FlightStatus.Active || existingFlight.FlightStatus == FlightStatus.Active)
-            {
-                return BadRequest("Cannot change details of a flight with reservations.");
-            }
+
+            existingFlight.Airline = updatedFlight.Airline;
+            existingFlight.Departure = updatedFlight.Departure;
+            existingFlight.Destination = updatedFlight.Destination;
+            existingFlight.DateOfDeparture = updatedFlight.DateOfDeparture;
+            existingFlight.DateOfDestination = updatedFlight.DateOfDestination;
+            existingFlight.Price = updatedFlight.Price;
+            existingFlight.FlightStatus = updatedFlight.FlightStatus;
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+
+        //Api for fetching the airlines from a flights
+        [HttpPost]
+        [Route("api/flights/airlines")]
+        public IHttpActionResult GetAirlinesFromFlights([FromBody] List<Flight> flights)
+        {
+            try
+            {
+                var airlineNames = flights.Select(f => f.Airline).Distinct().ToList();
+                return Ok(airlineNames);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
+        //Api for deleting a flight
+
         [HttpDelete]
         [Route("api/flights/{id}")]
-        public IHttpActionResult DeleteFlight(int id, [FromBody] List<Reservation> reservations)
+        public IHttpActionResult DeleteFlight(int id)
         {
             var flightToDelete = flights.FirstOrDefault(f => f.Id == id);
             if (flightToDelete == null)
@@ -110,7 +133,7 @@ namespace FlightReservationSystem.Controllers
                 return NotFound();
             }
 
-            // Check if there are reservations with status 'Created' or 'Approved' for this flight
+            var reservations = System.Web.HttpContext.Current.Application["Reservations"] as List<Reservation>;
             bool canDelete = true;
             foreach (var reservation in reservations)
             {
@@ -129,8 +152,11 @@ namespace FlightReservationSystem.Controllers
             }
 
             flights.Remove(flightToDelete);
+            System.Web.HttpContext.Current.Application["Reservations"] = reservations;
             return Ok();
         }
+
+        //Api for returning active flights
 
         [HttpGet]
         [Route("api/flights/active")]
@@ -139,6 +165,8 @@ namespace FlightReservationSystem.Controllers
             var activeFlights = flights.Where(f => f.FlightStatus == FlightStatus.Active).ToList();
             return Ok(activeFlights);
         }
+
+        //Api for filtering flights
 
         [HttpPost]
         [Route("api/flights/search")]
@@ -156,15 +184,17 @@ namespace FlightReservationSystem.Controllers
             }
             if (searchModel.DateOfDeparture.HasValue)
             {
-                filteredFlights = filteredFlights.Where(f => f.DateOfDeparture.Date == searchModel.DateOfDeparture.Value.Date);
+                filteredFlights = filteredFlights.Where(f => f.DateOfDeparture.Date >= searchModel.DateOfDeparture.Value.Date);
             }
             if (searchModel.DateOfDestination.HasValue)
             {
-                filteredFlights = filteredFlights.Where(f => f.DateOfDestination.Date == searchModel.DateOfDestination.Value.Date);
+                filteredFlights = filteredFlights.Where(f => f.DateOfDestination.Date <= searchModel.DateOfDestination.Value.Date);
             }
 
             return Ok(filteredFlights);
         }
+
+        //Api for fetching flight by an airline
 
         [HttpGet]
         [Route("api/airlines/{id}/flights")]
@@ -174,11 +204,12 @@ namespace FlightReservationSystem.Controllers
             return Ok(airlineFlights);
         }
 
+        //Api for updating seats when a ticket is bought
+
         [HttpPost]
         [Route("api/flights/updateSeats")]
         public IHttpActionResult UpdateSeats(UpdateSeatsRequest request)
         {
-            // Assuming 'flights' is your data context or repository
             var flight = flights.SingleOrDefault(f => f.Id == request.FlightId);
             if (flight == null)
             {
@@ -193,12 +224,68 @@ namespace FlightReservationSystem.Controllers
             flight.AvailableSeats -= request.Tickets;
             flight.OccupiedSeats += request.Tickets;
 
-            // Save the updated flight details
-            //SaveFlight(flight); // Implement SaveFlight to persist changes
+            return Ok(new { message = "Seats updated successfully" });
+        }
+
+
+        //Api for updating seats when a reservation gets canceled
+        [HttpPost]
+        [Route("api/flights/updateCanceledSeats")]
+        public IHttpActionResult UpdateCanceledSeats(UpdateSeatsRequest request)
+        {
+            var flight = flights.SingleOrDefault(f => f.Id == request.FlightId);
+            if (flight == null)
+            {
+                return NotFound();
+            }
+
+            flight.AvailableSeats += request.Tickets;
+            flight.OccupiedSeats -= request.Tickets;
 
             return Ok(new { message = "Seats updated successfully" });
         }
 
+        //Api for returning flights that have active reservations
+
+        [HttpGet]
+        [Route("api/flights/{id}/activeReservations")]
+        public IHttpActionResult HasActiveReservations(int id)
+        {
+            var reservations = System.Web.HttpContext.Current.Application["Reservations"] as List<Reservation>;
+            bool hasActiveReservations;
+            if (reservations != null)
+            {
+                hasActiveReservations = reservations.Any(reservation =>
+                    reservation.Flight.Id == id &&
+                    (reservation.ReservationStatus == ReservationStatus.Created || reservation.ReservationStatus == ReservationStatus.Approved));
+            }
+            else
+            {
+                hasActiveReservations = false;
+            }
+            System.Web.HttpContext.Current.Application["Reservations"] = reservations;
+            return Ok(hasActiveReservations);
+        }
+
+        //Api for returning multiple flights by their ID's
+        [HttpPost]
+        [Route("api/flights/byIds")]
+        public IHttpActionResult GetFlightsByIds([FromBody] List<int> flightIds)
+        {
+            if (flightIds != null && flightIds.Any())
+            {
+                try
+                {
+                    var filteredFlights = flights.Where(f => flightIds.Contains(f.Id)).ToList();
+                    return Ok(filteredFlights);
+                }
+                catch (Exception)
+                {
+                    return InternalServerError(); 
+                }
+            }
+            return NotFound(); 
+        }
 
     }
     public class FlightSearchModel

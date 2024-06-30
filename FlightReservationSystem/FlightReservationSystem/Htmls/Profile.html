@@ -4,45 +4,79 @@
     <meta charset="utf-8" />
     <title>My Profile</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            margin-left: 35%;
+            margin-top: 25px;
+        }
+
+        .filter-container {
+            margin-top: 20px;
+        }
+
+            .filter-container label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: bold;
+            }
+
+            .filter-container input[type="text"],
+            .filter-container input[type="email"],
+            .filter-container input[type="date"],
+            .filter-container select {
+                width: calc(100% - 20px);
+                padding: 8px;
+                margin-bottom: 15px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+    </style>
     <script>
         $(document).ready(function () {
             $("#navbar").load("navbar.html");
 
-            // Function to load user profile information
             function loadUserProfile() {
                 var loggedInUsername = sessionStorage.getItem("LoggedInUser");
-
                 if (loggedInUsername) {
-                    // Make AJAX request to fetch user details
                     $.ajax({
                         type: "GET",
                         url: "/api/users/" + loggedInUsername,
                         success: function (response) {
+                            var dateOfBirth = new Date(response.DateOfBirth);
+                            var formattedDateOfBirth =
+                                ('0' + dateOfBirth.getDate()).slice(-2) + '/' +
+                                ('0' + (dateOfBirth.getMonth() + 1)).slice(-2) + '/' +
+                                dateOfBirth.getFullYear();
                             // Display user information
                             $("#username").text(response.Username);
                             $("#name").val(response.Name);
+                            $("#password").val(response.Password);
                             $("#lastname").val(response.Lastname);
                             $("#email").val(response.Email);
-                            $("#dateOfBirth").val(response.DateOfBirth.slice(0, 10)); 
-                            var userGender = response.Gender === "1" ? "Female" : "Male";
-                            $("#gender").val(userGender);
-                            var userType = response.TypeOfUser === "1" ? "Administrator" : "Traveler";
-                            console.log("User type " + userType)
-                            $("#userType").text(userType); // Display type of user
-                            if (response.TypeOfUser == "1") {
+                            $("#dateOfBirth").val(response.DateOfBirth.slice(0, 10));
+                            $("#gender").val(response.Gender);
+                            console.log("lalaala" + response.TypeOfUser)
+                            if (response.TypeOfUser === "Administrator") {
+                                $("#adminSection").show();
                                 loadUsersTable();
-                                $("#adminSection").show(); // Show the admin section
                             }
                         },
                         error: function (xhr) {
                             console.error("Error fetching user:", xhr.statusText);
-                            // Handle error as needed (e.g., show error message)
                         }
                     });
                 } else {
                     console.log("User not logged in");
                 }
             }
+            var sortAscending = true;
             function loadUsersTable() {
                 $.ajax({
                     type: "GET",
@@ -50,10 +84,43 @@
                     success: function (response) {
                         var usersTable = $("#usersTable tbody");
                         usersTable.empty();
+                        response.sort(function (a, b) {
+                            var nameA = a.Name.toUpperCase(); 
+                            var nameB = b.Name.toUpperCase(); 
+                            if (sortAscending) {
+                                if (nameA < nameB) {
+                                    return -1;
+                                }
+                                if (nameA > nameB) {
+                                    return 1;
+                                }
+                                return 0;
+                            } else {
+                                if (nameA > nameB) {
+                                    return -1;
+                                }
+                                if (nameA < nameB) {
+                                    return 1;
+                                }
+                                return 0;
+                            }
+                        });
+                        response.sort(function (a, b) {
+                            var dateOfBirthA = new Date(a.DateOfBirth);
+                            var dateOfBirthB = new Date(b.DateOfBirth);
+                            if (sortAscending) {
+                                return dateOfBirthA - dateOfBirthB;
+                            } else {
+                                return dateOfBirthB - dateOfBirthA;
+                            }
+                        });
                         response.forEach(function (user) {
-                            var gender = user.Gender === "1" ? "Female" : "Male";
-                            var userType = user.TypeOfUser === "1" ? "Administrator" : "Traveler";
-
+                            // Format date to dd/mm/yyyy
+                            var dateOfBirth = new Date(user.DateOfBirth);
+                            var formattedDateOfBirth =
+                                ('0' + dateOfBirth.getDate()).slice(-2) + '/' +
+                                ('0' + (dateOfBirth.getMonth() + 1)).slice(-2) + '/' +
+                                dateOfBirth.getFullYear();
                             var filterName = $("#filterName").val().toLowerCase();
                             var filterLastname = $("#filterLastname").val().toLowerCase();
                             var filterStartDate = $("#filterStartDate").val();
@@ -66,14 +133,14 @@
 
                                 usersTable.append(
                                     `<tr>
-                                <td>${user.Username}</td>
-                                <td>${user.Name}</td>
-                                <td>${user.Lastname}</td>
-                                <td>${user.Email}</td>
-                                <td>${user.DateOfBirth.slice(0, 10)}</td>
-                                <td>${gender}</td>
-                                <td>${userType}</td>
-                            </tr>`
+                                                <td>${user.Username}</td>
+                                                <td>${user.Name}</td>
+                                                <td>${user.Lastname}</td>
+                                                <td>${user.Email}</td>
+                                                <td>${formattedDateOfBirth}</td>
+                                                <td>${user.Gender}</td>
+                                                <td>${user.TypeOfUser}</td>
+                                            </tr>`
                                 );
                             }
                         });
@@ -81,73 +148,78 @@
                     },
                     error: function (xhr) {
                         console.error("Error fetching users:", xhr.statusText);
-                        // Handle error as needed (e.g., show error message)
                     }
                 });
             }
-            // Call loadUserProfile when document is ready
             loadUserProfile();
 
             $("#filterButton").click(function () {
                 loadUsersTable();
             });
-        });
+            $("#sortNameButton").on("click", function () {
+                sortAscending = !sortAscending;
+                loadUsersTable();
+            });
+            $("#sortDOBButton").on("click", function () {
+                sortAscending = !sortAscending;
+                loadUsersTable(); 
+            });
 
-        $("#saveChanges").click(function () {
-            var updatedUser = {
-                Username: $("#username").text(), // Assuming username is not editable
-                Password: $("#password").val(),
-                Name: $("#name").val(),
-                Lastname: $("#lastname").val(),
-                Email: $("#email").val(),
-                DateOfBirth: $("#dateOfBirth").val(),
-                Gender: $("#gender").val(),
-                TypeOfUser: $("#userType").text() // Assuming type of user is not editable
-            };
+            $("#saveChanges").click(function () {
+                var updatedUser = {
+                    Username: $("#username").text(), 
+                    Password: $("#password").val(),
+                    Name: $("#name").val(),
+                    Lastname: $("#lastname").val(),
+                    Email: $("#email").val(),
+                    DateOfBirth: $("#dateOfBirth").val(),
+                    Gender: $("#gender").val(),
+                };
 
-            $.ajax({
-                type: "POST",
-                url: "/api/users/updateProfile",
-                contentType: "application/json",
-                data: JSON.stringify(updatedUser),
-                success: function (response) {
-                    if (response.success) {
-                        alert("Profile updated successfully!");
-                        // Optionally update sessionStorage with updated user data
-                        sessionStorage.setItem("LoggedInUser", JSON.stringify(updatedUser));
-                        window.location.href = "MainPage.html";
-                    } else {
-                        alert("Failed to update profile.");
+                $.ajax({
+                    type: "PUT",
+                    url: "/api/users/updateProfile",
+                    contentType: "application/json",
+                    data: JSON.stringify(updatedUser),
+                    success: function (response) {
+                        if (response.success) {
+
+                            window.location.href = "MainPage.html";
+                        } else {
+                            alert("Failed to update profile.");
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error("Error updating profile:", xhr.statusText);
+                        alert("Error updating profile. Please try again.");
                     }
-                },
-                error: function (xhr) {
-                    console.error("Error updating profile:", xhr.statusText);
-                    alert("Error updating profile. Please try again.");
-                }
+                });
             });
         });
     </script>
 </head>
 <body>
     <div id="navbar"></div>
-    <h1>My Profile Page</h1>
-    <div>
-        <label>Username: </label><span id="username"></span><br>
-        <label>Name: </label><input type="text" id="name"><br>
-        <label>Lastname: </label><input type="text" id="lastname"><br>
-        <label>Email: </label><input type="email" id="email"><br>
-        <label>Date of Birth: </label><input type="date" id="dateOfBirth"><br>
-        <label>Gender: </label>
-        <select id="gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-        </select><br>
-        <label>Type of User: </label><span id="userType"></span><br>
-        <button id="saveChanges">Save Changes</button>
+    <div class="container">
+        <h1>My Profile Page</h1>
+        <div class="filter-container">
+            <label>Username: </label><span id="username"></span><br>
+            <label>Password: </label><input type="text" id="password"><br>
+            <label>Name: </label><input type="text" id="name"><br>
+            <label>Lastname: </label><input type="text" id="lastname"><br>
+            <label>Email: </label><input type="email" id="email"><br>
+            <label>Date of Birth: </label><input type="date" id="dateOfBirth"><br>
+            <label>Gender: </label>
+            <select id="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select><br>
+            <button id="saveChanges">Save Changes</button>
+        </div>
     </div>
     <div id="adminSection" style="display:none;">
-        <h2>All Users</h2>
-        <div>
+        <h1>All Users</h1>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 20px;">
             <label for="filterName">Name:</label>
             <input type="text" id="filterName">
 
@@ -161,6 +233,8 @@
             <input type="date" id="filterEndDate">
 
             <button id="filterButton">Filter</button>
+            <button id="sortNameButton">Sort by Name</button>
+            <button id="sortDOBButton">Sort by Date of Birth</button>
         </div>
 
         <table id="usersTable" style="display:none;">
@@ -176,7 +250,7 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Users will be populated here -->
+                
             </tbody>
         </table>
     </div>

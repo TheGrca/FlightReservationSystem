@@ -1,98 +1,167 @@
 [
   {
-    "User": "User1",
-    "Flight": {
-      "FlightNumber": "F1001",
-      "Airline": "Airline1",
-      "DepartureAirport": "Airport A",
-      "DestinationAirport": "Airport B",
-      "DepartureTime": "2024-07-01T08:00:00",
-      "ArrivalTime": "2024-07-01T10:00:00",
-      "Price": 150.0,
-      "AvailableSeats": 100
+    "Id": 0,
+    "User": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1
+      ]
     },
-    "NumberOfPassengers": 2,
-    "TotalPrice": 300.0,
-    "ReservationStatus": "Approved"
-  },
-  {
-    "User": "User1",
     "Flight": {
-      "FlightNumber": "F1002",
-      "Airline": "Airline2",
-      "DepartureAirport": "Airport C",
-      "DestinationAirport": "Airport D",
-      "DepartureTime": "2024-07-02T09:00:00",
-      "ArrivalTime": "2024-07-02T11:00:00",
-      "Price": 200.0,
-      "AvailableSeats": 80
+      "Id": 6,
+      "Airline": "American Airlines",
+      "Departure": "New York",
+      "Destination": "Los Angeles",
+      "DateOfDeparture": "2024-07-06T09:00:00Z",
+      "DateOfDestination": "2024-07-06T12:00:00Z",
+      "AvailableSeats": 200,
+      "OccupiedSeats": 20,
+      "Price": 700.0,
+      "FlightStatus": "Active"
     },
-    "NumberOfPassengers": 1,
-    "TotalPrice": 200.0,
-    "ReservationStatus": "Completed"
-  },
-  {
-    "User": "User1",
-    "Flight": {
-      "FlightNumber": "F1003",
-      "Airline": "Airline3",
-      "DepartureAirport": "Airport E",
-      "DestinationAirport": "Airport F",
-      "DepartureTime": "2024-07-03T10:00:00",
-      "ArrivalTime": "2024-07-03T12:00:00",
-      "Price": 180.0,
-      "AvailableSeats": 90
-    },
-    "NumberOfPassengers": 3,
-    "TotalPrice": 540.0,
-    "ReservationStatus": "Created"
-  },
-  {
-    "User": "User2",
-    "Flight": {
-      "FlightNumber": "F2001",
-      "Airline": "Airline1",
-      "DepartureAirport": "Airport A",
-      "DestinationAirport": "Airport B",
-      "DepartureTime": "2024-07-04T08:00:00",
-      "ArrivalTime": "2024-07-04T10:00:00",
-      "Price": 170.0,
-      "AvailableSeats": 95
-    },
-    "NumberOfPassengers": 1,
-    "TotalPrice": 170.0,
-    "ReservationStatus": "Approved"
-  },
-  {
-    "User": "User2",
-    "Flight": {
-      "FlightNumber": "F2002",
-      "Airline": "Airline2",
-      "DepartureAirport": "Airport C",
-      "DestinationAirport": "Airport D",
-      "DepartureTime": "2024-07-05T09:00:00",
-      "ArrivalTime": "2024-07-05T11:00:00",
-      "Price": 190.0,
-      "AvailableSeats": 85
-    },
-    "NumberOfPassengers": 2,
-    "TotalPrice": 380.0,
+    "NumberOfPassengers": 20,
+    "TotalPrice": 14000.0,
     "ReservationStatus": "Canceled"
   },
   {
-    "User": "User2",
-    "Flight": {
-      "FlightNumber": "F2003",
-      "Airline": "Airline3",
-      "DepartureAirport": "Airport E",
-      "DestinationAirport": "Airport F",
-      "DepartureTime": "2024-07-06T10:00:00",
-      "ArrivalTime": "2024-07-06T12:00:00",
-      "Price": 210.0,
-      "AvailableSeats": 70
+    "Id": 1,
+    "User": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1
+      ]
     },
-    "NumberOfPassengers": 4,
-    "TotalPrice": 840.0,
-    "ReservationStatus": "Created"
+    "Flight": {
+      "Id": 19,
+      "Airline": "WizzAir",
+      "Departure": "New York",
+      "Destination": "Los Angeles",
+      "DateOfDeparture": "2024-06-28T20:02:00",
+      "DateOfDestination": "2024-06-28T20:03:00",
+      "AvailableSeats": 249,
+      "OccupiedSeats": 1,
+      "Price": 1000.0,
+      "FlightStatus": "Completed"
+    },
+    "NumberOfPassengers": 1,
+    "TotalPrice": 1000.0,
+    "ReservationStatus": "Completed"
+  },
+  {
+    "Id": 2,
+    "User": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2
+      ]
+    },
+    "Flight": {
+      "Id": 20,
+      "Airline": "Emirates",
+      "Departure": "Vienna",
+      "Destination": "Berlin",
+      "DateOfDeparture": "2024-06-28T20:16:00",
+      "DateOfDestination": "2024-06-28T20:17:00",
+      "AvailableSeats": 145,
+      "OccupiedSeats": 5,
+      "Price": 1500.0,
+      "FlightStatus": "Completed"
+    },
+    "NumberOfPassengers": 5,
+    "TotalPrice": 7500.0,
+    "ReservationStatus": "Completed"
+  },
+  {
+    "Id": 3,
+    "User": {
+      "Username": "Ivan",
+      "Password": "123",
+      "Name": "Ivan",
+      "Lastname": "Grcic",
+      "Email": "ivangrcic6@gmail.com",
+      "DateOfBirth": "2002-07-04T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2,
+        3
+      ]
+    },
+    "Flight": {
+      "Id": 21,
+      "Airline": "My Airline",
+      "Departure": "Banja Luka",
+      "Destination": "Beograd",
+      "DateOfDeparture": "2024-06-30T03:05:00",
+      "DateOfDestination": "2024-06-30T06:05:00",
+      "AvailableSeats": 400,
+      "OccupiedSeats": 0,
+      "Price": 1000.0,
+      "FlightStatus": "Active"
+    },
+    "NumberOfPassengers": 10,
+    "TotalPrice": 10000.0,
+    "ReservationStatus": "Canceled"
+  },
+  {
+    "Id": 4,
+    "User": {
+      "Username": "User1",
+      "Password": "123",
+      "Name": "Marko",
+      "Lastname": "Markovic",
+      "Email": "marko.markovic@gmail.com",
+      "DateOfBirth": "1990-01-01T00:00:00",
+      "Gender": "Male",
+      "TypeOfUser": "Traveler",
+      "Reservations": [
+        0,
+        1,
+        2,
+        4
+      ]
+    },
+    "Flight": {
+      "Id": 5,
+      "Airline": "AirSerbia",
+      "Departure": "Singapore",
+      "Destination": "Hong Kong",
+      "DateOfDeparture": "2024-07-05T16:00:00Z",
+      "DateOfDestination": "2024-07-05T18:00:00Z",
+      "AvailableSeats": 146,
+      "OccupiedSeats": 4,
+      "Price": 600.0,
+      "FlightStatus": "Active"
+    },
+    "NumberOfPassengers": 2,
+    "TotalPrice": 1200.0,
+    "ReservationStatus": "Approved"
   }
 ]
